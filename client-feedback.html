@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Leave Feedback</title>
+<style>
+/* ── Reset & variables ───────────────────────────────────────────────── */
+:root {
+  --bg:        #f5f5f5;
+  --surface:   #ffffff;
+  --border:    #e5e7eb;
+  --border-focus: #2563eb;
+  --text:      #111827;
+  --muted:     #6b7280;
+  --accent:    #2563eb;
+  --accent-dk: #1d4ed8;
+  --del:       #ef4444;
+  --r:         8px;
+  --font:      -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono:      'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────── */
+.view { min-height: 100dvh; }
+.wrap {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 44px 24px 80px;
+}
+.wrap.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100dvh;
+  padding: 40px 24px;
+}
+
+/* ── Logo ────────────────────────────────────────────────────────────── */
+.logo-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 64px;
+  background: #f3f4f6;
+  border: 1.5px dashed #d1d5db;
+  border-radius: var(--r);
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  margin: 0 auto 40px;
+  user-select: none;
+}
+
+/* ── Form header ─────────────────────────────────────────────────────── */
+.form-header { margin-bottom: 36px; }
+.project-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.video-title {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.intro {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* ── Column labels ───────────────────────────────────────────────────── */
+.col-labels {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.cl-sp  { width: 24px; flex-shrink: 0; }
+.cl-tc  { width: 122px; flex-shrink: 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+.cl-txt { flex: 1; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+
+/* ── Comment rows ────────────────────────────────────────────────────── */
+.comment-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.rn {
+  width: 24px;
+  font-size: 12px;
+  color: #d1d5db;
+  text-align: right;
+  flex-shrink: 0;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+.tc {
+  width: 122px;
+  flex-shrink: 0;
+}
+.tx { flex: 1; min-width: 0; }
+
+/* ── Inputs ──────────────────────────────────────────────────────────── */
+input[type="text"] {
+  display: block;
+  width: 100%;
+  background: var(--surface);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 9px 11px;
+  font-size: 14px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+}
+input[type="text"]:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+input::placeholder { color: #d1d5db; }
+input.tc-field {
+  font-family: var(--mono);
+  font-size: 13px;
+  text-align: center;
+  letter-spacing: 1px;
+  padding: 9px 6px;
+}
+
+/* ── Delete button ───────────────────────────────────────────────────── */
+.del {
+  background: none;
+  border: none;
+  color: #d1d5db;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 5px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  transition: color 0.12s, background 0.12s;
+}
+.del:hover { color: var(--del); background: #fef2f2; }
+
+/* ── Add row button ──────────────────────────────────────────────────── */
+.btn-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  background: none;
+  border: 1.5px dashed var(--border);
+  color: var(--muted);
+  border-radius: var(--r);
+  padding: 11px 16px;
+  font-size: 14px;
+  font-family: var(--font);
+  cursor: pointer;
+  margin-top: 14px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.btn-add:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(37, 99, 235, 0.03);
+}
+
+/* ── Main buttons ────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  border-radius: var(--r);
+  font-size: 15px;
+  font-family: var(--font);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  white-space: nowrap;
+  -webkit-appearance: none;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-ghost {
+  background: var(--surface);
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+}
+.btn-ghost:hover:not(:disabled) { color: var(--text); border-color: #9ca3af; }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: 1.5px solid var(--accent);
+}
+.btn-primary:hover:not(:disabled) { background: var(--accent-dk); border-color: var(--accent-dk); }
+
+/* ── Action bar ──────────────────────────────────────────────────────── */
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* ── Toasts & error messages ─────────────────────────────────────────── */
+.toast {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: var(--r);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.toast.success {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+.toast.warn {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+.toast.error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* ── Review screen ───────────────────────────────────────────────────── */
+.review-header { margin-bottom: 28px; }
+.review-header h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.review-context { font-size: 14px; color: var(--muted); }
+.review-count {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.review-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.review-item:first-of-type { border-top: 1px solid var(--border); }
+.ri-n {
+  width: 22px;
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: right;
+  flex-shrink: 0;
+  padding-top: 1px;
+  font-variant-numeric: tabular-nums;
+}
+.ri-body { flex: 1; min-width: 0; }
+.ri-tc {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+.ri-tx { font-size: 15px; color: var(--text); word-break: break-word; }
+.ri-no-tc .ri-tx { color: var(--muted); font-style: italic; }
+
+/* ── Thank you screen ────────────────────────────────────────────────── */
+.thanks-icon {
+  width: 56px;
+  height: 56px;
+  background: #f0fdf4;
+  color: #16a34a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 24px;
+}
+.wrap.center h2 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+.thanks-msg { font-size: 15px; color: var(--muted); max-width: 340px; line-height: 1.65; }
+
+/* ── Mobile ──────────────────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .wrap { padding: 32px 16px 60px; }
+  .logo-box { width: 150px; height: 54px; }
+  .video-title { font-size: 21px; }
+  .col-labels { display: none; }
+
+  /* On mobile: number + timecode on row 1, comment full-width on row 2 */
+  .comment-row { flex-wrap: wrap; padding: 12px 0; align-items: flex-start; }
+  .rn          { align-self: center; padding-top: 0; }
+  .tc          { flex: 1; width: auto; min-width: 0; }
+  .del         { align-self: center; }
+  .tx          {
+    order: 4;
+    flex-basis: 100%;
+    margin-left: 34px; /* align with tc field */
+    margin-top: 6px;
+  }
+
+  .actions { flex-direction: column-reverse; gap: 10px; }
+  .btn { width: 100%; padding: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- VIEW: FORM                                                         -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div id="view-form" class="view">
+  <div class="wrap">
+
+    <div class="logo-box" aria-hidden="true"><span>Your Logo</span></div>
+
+    <div class="form-header">
+      <p class="project-label" id="disp-project"></p>
+      <h1 class="video-title" id="disp-video">Video Feedback</h1>
+      <p class="intro">Use the form below to leave your notes. Add a timecode for each comment — you'll find it in the bottom-left corner of the video player.</p>
+    </div>
+
+    <div class="col-labels" aria-hidden="true">
+      <span class="cl-sp"></span>
+      <span class="cl-tc">Timecode</span>
+      <span class="cl-txt">Comment</span>
+    </div>
+
+    <div id="comments-list"></div>
+
+    <button class="btn-add" id="btn-add" type="button">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Add comment
+    </button>
+
+    <div class="actions">
+      <button class="btn btn-ghost" id="btn-save" type="button">Save draft</button>
+      <button class="btn btn-primary" id="btn-review" type="button">Review &amp; Submit →</button>
+    </div>
+
+    <div class="toast" id="form-toast" hidden></div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- VIEW: REVIEW                                                       -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div id="view-review" class="view" hidden>
+  <div class="wrap">
+
+    <div class="logo-box" aria-hidden="true"><span>Your Logo</span></div>
+
+    <div class="review-header">
+      <h2>Review your feedback</h2>
+      <p class="review-context" id="review-context"></p>
+    </div>
+
+    <p class="review-count" id="review-count"></p>
+    <div id="review-list"></div>
+
+    <div class="actions">
+      <button class="btn btn-ghost" id="btn-back" type="button">← Edit</button>
+      <button class="btn btn-primary" id="btn-submit" type="button">Submit Feedback</button>
+    </div>
+
+    <div class="toast" id="review-toast" hidden></div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- VIEW: THANK YOU                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div id="view-thanks" class="view" hidden>
+  <div class="wrap center">
+    <div class="logo-box" aria-hidden="true"><span>Your Logo</span></div>
+    <div class="thanks-icon" aria-hidden="true">✓</div>
+    <h2>Feedback submitted</h2>
+    <p class="thanks-msg">Thank you — your notes have been received. We'll review them and be in touch.</p>
+  </div>
+</div>
+
+
+<script>
+'use strict';
+
+// ── Config — update WORKER_URL after deploying notion-proxy.js ────────
+const WORKER_URL  = 'https://YOUR_WORKER.workers.dev';
+const TASKS_DB_ID = '33119ff7-94ee-817a-b249-ccca6d2df580';
+
+// ── URL params ────────────────────────────────────────────────────────
+const _p         = new URLSearchParams(location.search);
+const VIDEO      = _dec(_p.get('video')     || '');
+const PROJECT    = _dec(_p.get('project')   || '');
+const CONTENT_ID = (_p.get('contentId')     || '').trim();
+// Stable key for localStorage
+const DRAFT_KEY  = 'fbdraft_' + _simpleHash(VIDEO + '|' + PROJECT);
+
+function _dec(s) {
+  // Decode URI and replace hyphens with spaces (supports ?video=Episode-03 shorthand)
+  try { return decodeURIComponent(s).replace(/-/g, ' ').trim(); } catch { return s.trim(); }
+}
+function _simpleHash(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return Math.abs(h).toString(36);
+}
+
+// ── State ─────────────────────────────────────────────────────────────
+let _rowId = 0;
+
+// ── DOM helpers ───────────────────────────────────────────────────────
+const $  = id  => document.getElementById(id);
+const el = tag => document.createElement(tag);
+
+// ── Init ──────────────────────────────────────────────────────────────
+function init() {
+  // Page title
+  document.title = [VIDEO, PROJECT].filter(Boolean).join(' — ') || 'Leave Feedback';
+
+  // Header text
+  const proj = $('disp-project');
+  if (PROJECT) { proj.textContent = PROJECT; } else { proj.hidden = true; }
+  $('disp-video').textContent = VIDEO || 'Your Feedback';
+
+  // Review context line
+  $('review-context').textContent = [PROJECT, VIDEO].filter(Boolean).join(' — ');
+
+  // Restore or start fresh
+  const draft = _loadDraft();
+  if (draft && draft.length) {
+    draft.forEach(c => addRow(c.timecode, c.text));
+  } else {
+    addRow();
+  }
+}
+
+// ── Draft persistence ─────────────────────────────────────────────────
+function _b64enc(obj) {
+  try {
+    const json  = JSON.stringify(obj);
+    const bytes = new TextEncoder().encode(json);
+    let bin = '';
+    for (const b of bytes) bin += String.fromCharCode(b);
+    return btoa(bin);
+  } catch { return null; }
+}
+
+function _b64dec(str) {
+  try {
+    const bin   = atob(str);
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes));
+  } catch { return null; }
+}
+
+function _loadDraft() {
+  // URL draft takes priority (allows resuming from emailed link)
+  const raw = _p.get('draft');
+  if (raw) {
+    const d = _b64dec(raw);
+    if (Array.isArray(d) && d.length) return d;
+  }
+  // Fallback to localStorage
+  try {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    if (saved) {
+      const d = JSON.parse(saved);
+      if (Array.isArray(d) && d.length) return d;
+    }
+  } catch {}
+  return null;
+}
+
+function _persistDraft(comments) {
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(comments)); } catch {}
+}
+
+// ── Row management ────────────────────────────────────────────────────
+function addRow(tc, text) {
+  tc   = tc   || '';
+  text = text || '';
+  const id  = ++_rowId;
+  const row = el('div');
+  row.className    = 'comment-row';
+  row.dataset.rowId = id;
+
+  const numSpan = el('span');
+  numSpan.className   = 'rn';
+  numSpan.setAttribute('aria-hidden', 'true');
+
+  const tcInput = el('input');
+  tcInput.type        = 'text';
+  tcInput.className   = 'tc tc-field';
+  tcInput.inputMode   = 'numeric';
+  tcInput.placeholder = '00:00:00:00';
+  tcInput.maxLength   = 11;
+  tcInput.autocomplete = 'off';
+  tcInput.spellcheck   = false;
+  tcInput.value        = _esc(tc);
+  tcInput.setAttribute('aria-label', 'Timecode');
+  tcInput.addEventListener('input',   onTcInput);
+  tcInput.addEventListener('keydown', onTcKeydown);
+
+  const txtInput = el('input');
+  txtInput.type        = 'text';
+  txtInput.className   = 'tx';
+  txtInput.placeholder = 'Your comment…';
+  txtInput.value       = _esc(text);
+  txtInput.setAttribute('aria-label', 'Comment');
+  txtInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); addRow(); }
+  });
+
+  const delBtn = el('button');
+  delBtn.type      = 'button';
+  delBtn.className = 'del';
+  delBtn.innerHTML = '&times;';
+  delBtn.setAttribute('aria-label', 'Remove this comment');
+  delBtn.addEventListener('click', () => delRow(id));
+
+  row.appendChild(numSpan);
+  row.appendChild(tcInput);
+  row.appendChild(txtInput);
+  row.appendChild(delBtn);
+
+  $('comments-list').appendChild(row);
+  _renumber();
+
+  // Focus timecode of new empty rows
+  if (!tc && !text) setTimeout(() => tcInput.focus(), 30);
+}
+
+function delRow(id) {
+  const row = $('comments-list').querySelector(`[data-row-id="${id}"]`);
+  if (!row) return;
+  if ($('comments-list').querySelectorAll('.comment-row').length === 1) {
+    // Don't delete the last row — just clear it
+    row.querySelector('.tc').value = '';
+    row.querySelector('.tx').value = '';
+    return;
+  }
+  row.remove();
+  _renumber();
+}
+
+function _renumber() {
+  $('comments-list').querySelectorAll('.comment-row').forEach((r, i) => {
+    r.querySelector('.rn').textContent = i + 1;
+  });
+}
+
+function _getComments() {
+  return Array.from($('comments-list').querySelectorAll('.comment-row')).map(r => ({
+    timecode: r.querySelector('.tc').value.trim(),
+    text:     r.querySelector('.tx').value.trim(),
+  })).filter(c => c.timecode || c.text);
+}
+
+// ── Timecode auto-formatter ───────────────────────────────────────────
+// User types digits only; colons are inserted automatically: HH:MM:SS:FF
+function onTcInput(e) {
+  const input = e.target;
+  const pos   = input.selectionStart;
+  const old   = input.value;
+
+  const digits = old.replace(/\D/g, '').slice(0, 8);
+  let tc = '';
+  for (let i = 0; i < digits.length; i++) {
+    if (i > 0 && i % 2 === 0) tc += ':';
+    tc += digits[i];
+  }
+  input.value = tc;
+
+  // Restore cursor: count digits before old cursor, find same position in new string
+  let digsBefore = 0;
+  for (let i = 0; i < Math.min(pos, old.length); i++) {
+    if (/\d/.test(old[i])) digsBefore++;
+  }
+  let np = 0, counted = 0;
+  while (np < tc.length && counted < digsBefore) {
+    if (/\d/.test(tc[np])) counted++;
+    np++;
+  }
+  try { input.setSelectionRange(np, np); } catch {}
+}
+
+function onTcKeydown(e) {
+  // Tab from timecode → move to comment field in same row
+  if (e.key === 'Tab' && !e.shiftKey) {
+    const row = e.target.closest('.comment-row');
+    if (row) { e.preventDefault(); row.querySelector('.tx').focus(); }
+  }
+}
+
+// ── Save draft ────────────────────────────────────────────────────────
+function saveDraft() {
+  const comments = _getComments();
+  _persistDraft(comments);
+
+  // Build URL with encoded draft for resuming on another device
+  const params = new URLSearchParams(_p);
+  const enc    = _b64enc(comments);
+  if (enc) params.set('draft', enc);
+
+  const draftUrl = `${location.origin}${location.pathname}?${params.toString()}`;
+  const label    = [VIDEO, PROJECT].filter(Boolean).join(' — ') || 'video';
+
+  // Open email client with the draft link
+  window.location.href =
+    `mailto:?subject=${encodeURIComponent('Feedback draft — ' + label)}` +
+    `&body=${encodeURIComponent('Resume your feedback here:\n\n' + draftUrl)}`;
+
+  showToast('form-toast', '✓ Draft saved to this device. Email opened with a link to resume on any device.', 'success');
+}
+
+// ── Review ────────────────────────────────────────────────────────────
+function showReview() {
+  const comments = _getComments();
+
+  if (!comments.length) {
+    showToast('form-toast', 'Please add at least one comment before submitting.', 'warn');
+    return;
+  }
+
+  _persistDraft(comments);
+
+  const list = $('review-list');
+  list.innerHTML = '';
+
+  comments.forEach((c, i) => {
+    const item = el('div');
+    item.className = 'review-item' + (!c.timecode ? ' ri-no-tc' : '');
+    item.innerHTML =
+      `<div class="ri-n">${i + 1}</div>` +
+      `<div class="ri-body">` +
+        (c.timecode ? `<div class="ri-tc">${_esc(c.timecode)}</div>` : '') +
+        `<div class="ri-tx">${_esc(c.text) || '<em style="color:#9ca3af">No comment text</em>'}</div>` +
+      `</div>`;
+    list.appendChild(item);
+  });
+
+  $('review-count').textContent =
+    comments.length + ' ' + (comments.length === 1 ? 'note' : 'notes');
+
+  showView('review');
+}
+
+// ── Submit ────────────────────────────────────────────────────────────
+async function submitFeedback() {
+  const comments = _getComments();
+  const btn      = $('btn-submit');
+  const toastEl  = $('review-toast');
+
+  btn.disabled    = true;
+  btn.textContent = 'Submitting…';
+  toastEl.hidden  = true;
+
+  // Build task title
+  const title = [PROJECT, VIDEO, 'Client Feedback'].filter(Boolean).join(' — ') || 'Client Feedback';
+
+  // Build Notion block children
+  const blocks = [];
+  for (const c of comments) {
+    if (c.timecode) {
+      blocks.push({
+        object: 'block', type: 'heading_3',
+        heading_3: { rich_text: [{ type: 'text', text: { content: c.timecode } }] },
+      });
+    }
+    if (c.text) {
+      blocks.push({
+        object: 'block', type: 'to_do',
+        to_do: {
+          rich_text: [{ type: 'text', text: { content: c.text.slice(0, 2000) } }],
+          checked: false,
+        },
+      });
+    }
+  }
+
+  const properties = {
+    Name:   { title: [{ type: 'text', text: { content: title } }] },
+    Type:   { select: { name: 'Revision Round' } },
+    Status: { select: { name: 'Not Started' } },
+  };
+  if (CONTENT_ID) properties.Content = { relation: [{ id: CONTENT_ID }] };
+
+  try {
+    const res = await fetch(WORKER_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        notionEndpoint: 'pages',
+        payload: {
+          parent:     { database_id: TASKS_DB_ID },
+          properties,
+          children:   blocks.slice(0, 100),
+        },
+      }),
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || `Server returned ${res.status}`);
+
+    // Clear draft on success
+    try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    showView('thanks');
+
+  } catch (err) {
+    showToast('review-toast', `Submission failed: ${_esc(err.message)}. Please try again.`, 'error');
+    btn.disabled    = false;
+    btn.textContent = 'Submit Feedback';
+  }
+}
+
+// ── View switching ────────────────────────────────────────────────────
+function showView(name) {
+  ['form', 'review', 'thanks'].forEach(v => {
+    const el = $('view-' + v);
+    if (el) el.hidden = (v !== name);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Toast notifications ───────────────────────────────────────────────
+function showToast(id, msg, type) {
+  type = type || 'success';
+  const t = $(id);
+  t.className  = 'toast ' + type;
+  t.innerHTML  = msg;
+  t.hidden     = false;
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.hidden = true; }, 6000);
+}
+
+// ── Escape HTML ───────────────────────────────────────────────────────
+function _esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+  $('btn-add').addEventListener('click', () => addRow());
+  $('btn-save').addEventListener('click', saveDraft);
+  $('btn-review').addEventListener('click', showReview);
+  $('btn-back').addEventListener('click', () => showView('form'));
+  $('btn-submit').addEventListener('click', submitFeedback);
+});
+</script>
+</body>
+</html>
