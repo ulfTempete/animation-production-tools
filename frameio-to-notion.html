@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frame.io → Notion</title>
+<style>
+:root {
+  --bg:      #0f0f0f;
+  --surface: #1a1a1a;
+  --surface2:#222;
+  --border:  #2a2a2a;
+  --text:    #e2e2e2;
+  --muted:   #666;
+  --accent:  #5b8eff;
+  --green:   #3ecf8e;
+  --red:     #e05d5d;
+  --yellow:  #f5a623;
+  --r:       7px;
+  --font:    -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono:    'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 60px; }
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.2px; }
+h1 .arrow { color: var(--muted); margin: 0 4px; }
+
+/* Buttons */
+.btn {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 7px 14px;
+  font-size: 13px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+.btn:hover { background: #2a2a2a; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 500;
+}
+.btn.primary:hover:not(:disabled) { background: #4a7aee; }
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Form */
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+label {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+input[type="text"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+select option { background: var(--surface); }
+.row { display: flex; gap: 10px; align-items: flex-end; }
+.row .field { flex: 1; margin-bottom: 0; }
+
+/* Notice */
+.notice {
+  font-size: 12px;
+  color: #b5842a;
+  padding: 10px 13px;
+  background: rgba(245,166,35,0.07);
+  border: 1px solid rgba(245,166,35,0.18);
+  border-radius: var(--r);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.notice a { color: var(--yellow); }
+.notice code {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: rgba(245,166,35,0.15);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+/* Drop zone */
+.dropzone {
+  border: 2px dashed var(--border);
+  border-radius: var(--r);
+  padding: 44px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  margin-bottom: 14px;
+  user-select: none;
+}
+.dropzone:hover, .dropzone.over {
+  border-color: var(--accent);
+  background: rgba(91,142,255,0.04);
+}
+.dz-icon { font-size: 30px; margin-bottom: 10px; }
+.dz-label { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.dz-sub { font-size: 13px; color: var(--muted); }
+.dz-sub .link { color: var(--accent); cursor: pointer; }
+
+/* CSV info strip */
+.csv-strip {
+  display: flex;
+  gap: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 14px;
+  font-size: 12px;
+}
+.csv-cell {
+  flex: 1;
+  padding: 10px 14px;
+  border-right: 1px solid var(--border);
+}
+.csv-cell:last-child { border-right: none; }
+.csv-key { color: var(--muted); margin-bottom: 2px; text-transform: uppercase; font-size: 10px; letter-spacing: 0.4px; }
+.csv-val { font-weight: 600; font-size: 13px; }
+
+/* Comments list */
+.comments-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--bg);
+  max-height: 380px;
+  overflow-y: auto;
+}
+.comment {
+  display: flex;
+  gap: 10px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.comment:last-child { border-bottom: none; }
+.comment.reply {
+  padding-left: 32px;
+  background: rgba(255,255,255,0.015);
+}
+.c-icon { flex-shrink: 0; font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1; }
+.c-body { flex: 1; min-width: 0; }
+.c-meta { display: flex; align-items: center; gap: 7px; margin-bottom: 2px; flex-wrap: wrap; }
+.c-tc {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  background: rgba(91,142,255,0.12);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.c-sep   { color: var(--muted); }
+.c-author { font-size: 12px; font-weight: 600; }
+.c-text { font-size: 13px; color: #c8c8c8; word-break: break-word; }
+
+/* Status bar */
+.status {
+  padding: 11px 14px;
+  border-radius: var(--r);
+  font-size: 13px;
+  margin-top: 14px;
+  display: none;
+}
+.status.success { background: rgba(62,207,142,0.09); border: 1px solid rgba(62,207,142,0.25); color: var(--green); }
+.status.error   { background: rgba(224,93,93,0.09);  border: 1px solid rgba(224,93,93,0.25);  color: var(--red);   }
+.status.loading { background: rgba(91,142,255,0.09); border: 1px solid rgba(91,142,255,0.25); color: var(--accent);}
+.status a { color: inherit; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Frame.io <span class="arrow">→</span> Notion</h1>
+    <button class="btn" id="settingsToggle">⚙ Settings</button>
+  </header>
+
+  <!-- Settings -->
+  <div class="card" id="settingsPanel" style="display:none">
+    <div class="card-title">Configuration</div>
+    <div class="notice">
+      Start the app via <code>start.sh</code> and the proxy runs automatically on
+      <code>http://localhost:8080/</code>. If you open the HTML directly without the proxy,
+      Notion API calls will be blocked by CORS.
+    </div>
+    <div class="field">
+      <label>Notion API Key</label>
+      <input type="password" id="apiKey" placeholder="ntn_…" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>APS Tasks Database ID</label>
+      <input type="text" id="tasksDbId">
+    </div>
+    <div class="field">
+      <label>APS Content Database ID</label>
+      <input type="text" id="contentDbId">
+    </div>
+    <div class="field">
+      <label>CORS Proxy URL <span style="color:var(--muted);font-size:11px;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input type="text" id="proxyUrl" placeholder="http://localhost:8080/">
+    </div>
+    <button class="btn primary" id="saveSettings">Save Settings</button>
+  </div>
+
+  <!-- Drop zone -->
+  <div class="dropzone" id="dropzone">
+    <div class="dz-icon">📄</div>
+    <div class="dz-label">Drop Frame.io CSV export here</div>
+    <div class="dz-sub">or <span class="link" id="browseLink">browse files</span></div>
+    <input type="file" id="fileInput" accept=".csv" style="display:none">
+  </div>
+
+  <!-- Preview + form (hidden until CSV loaded) -->
+  <div id="previewSection" style="display:none">
+
+    <div class="card">
+      <div class="card-title">CSV Preview</div>
+      <div class="csv-strip" id="csvStrip"></div>
+      <div class="comments-wrap" id="commentsList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Create Notion Task</div>
+      <div class="field">
+        <label>Task Title</label>
+        <input type="text" id="taskTitle" placeholder="Task title…">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Link to Episode</label>
+          <select id="episodeSelect">
+            <option value="">— Select episode —</option>
+          </select>
+        </div>
+        <button class="btn" id="refreshEpisodes" style="flex-shrink:0">↻ Refresh</button>
+      </div>
+      <div style="margin-top:16px">
+        <button class="btn primary" id="createTask" style="width:100%;padding:10px 14px;font-size:14px">
+          Create Task in Notion
+        </button>
+      </div>
+      <div class="status" id="statusMsg"></div>
+    </div>
+
+  </div>
+
+</div>
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// Constants
+// ─────────────────────────────────────────────────────────────────────────────
+const DEFAULTS = {
+  tasksDb:  '33119ff7-94ee-817a-b249-ccca6d2df580',
+  contentDb:'33119ff7-94ee-8110-8df4-fbc98620bf45',
+};
+const NOTION_VER = '2022-06-28';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────────────────────────────────────
+let csvData = null; // { project, asset, tree }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Settings (localStorage)
+// ─────────────────────────────────────────────────────────────────────────────
+function loadSettings() {
+  el('apiKey').value     = ls('notion_key')     || '';
+  el('tasksDbId').value  = ls('notion_tasks_db')  || DEFAULTS.tasksDb;
+  el('contentDbId').value= ls('notion_content_db')|| DEFAULTS.contentDb;
+  el('proxyUrl').value   = ls('notion_proxy')   || 'http://localhost:8080/';
+}
+function saveSettings() {
+  lsSet('notion_key',        el('apiKey').value.trim());
+  lsSet('notion_tasks_db',   el('tasksDbId').value.trim());
+  lsSet('notion_content_db', el('contentDbId').value.trim());
+  lsSet('notion_proxy',      el('proxyUrl').value.trim());
+  el('settingsPanel').style.display = 'none';
+}
+const ls    = k => localStorage.getItem(k) || '';
+const lsSet = (k, v) => localStorage.setItem(k, v);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CSV Parser
+// ─────────────────────────────────────────────────────────────────────────────
+function parseCSV(raw) {
+  raw = raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const rows = [];
+  let row = [], field = '', inQ = false;
+  for (let i = 0; i < raw.length; i++) {
+    const c = raw[i];
+    if (inQ) {
+      if (c === '"' && raw[i+1] === '"') { field += '"'; i++; }
+      else if (c === '"') inQ = false;
+      else field += c;
+    } else {
+      if      (c === '"')  inQ = true;
+      else if (c === ',')  { row.push(field); field = ''; }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else field += c;
+    }
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  while (rows.length && rows[rows.length-1].every(c => !c.trim())) rows.pop();
+  return rows;
+}
+
+function detectCols(headers) {
+  const h = headers.map(s => s.toLowerCase().trim());
+  // Exact match wins over fuzzy — avoids "comment id" beating "comment", etc.
+  const exact = (...terms) => h.findIndex(c => terms.some(t => c === t));
+  const fuzzy = (...terms) => h.findIndex(c => terms.some(t => c.includes(t)));
+  const first = (...fns)   => { for (const f of fns) { const i = f(); if (i >= 0) return i; } return -1; };
+  return {
+    project:  fuzzy('project'),
+    asset:    fuzzy('asset', 'file name', 'filename', 'clip', 'reel'),
+    // Exact "timecode" first — Frame.io CSVs also have a "Frame" column (frame numbers) we don't want
+    timecode: first(() => exact('timecode'), () => fuzzy('time code', 'tc')),
+    // Exact "comment" first — avoids matching "comment id" or "parent comment id"
+    comment:  first(() => exact('comment'), () => h.findIndex(c => c.includes('comment') && !c.includes('id') && !c.includes('parent'))),
+    author:   first(() => exact('author'), () => fuzzy('reviewer', 'commenter', 'user')),
+    date:     fuzzy('date', 'created', 'timestamp', 'posted'),
+    id:       exact('id', 'comment id', 'comment_id', 'uuid'),
+    parentId: fuzzy('parent', 'reply', 'in reply', 'thread'),
+  };
+}
+
+function buildTree(rows, cols) {
+  const byId = {}, all = [];
+  rows.forEach((row, i) => {
+    const rawId = cols.id >= 0 ? row[cols.id]?.trim() : '';
+    const obj = {
+      id:       rawId || String(i),
+      parentId: cols.parentId >= 0 ? (row[cols.parentId]?.trim() || '') : '',
+      author:   cols.author >= 0   ? (row[cols.author]?.trim()   || '') : '',
+      text:     cols.comment >= 0  ? (row[cols.comment]?.trim()  || '') : '',
+      timecode: cols.timecode >= 0 ? (row[cols.timecode]?.trim() || '') : '',
+      replies: [],
+    };
+    byId[obj.id] = obj;
+    all.push(obj);
+  });
+
+  const roots = [];
+  for (const c of all) {
+    if (!c.text) continue;
+    if (c.parentId && byId[c.parentId]) byId[c.parentId].replies.push(c);
+    else roots.push(c);
+  }
+  return roots;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Rendering
+// ─────────────────────────────────────────────────────────────────────────────
+function renderStrip(project, asset, count) {
+  el('csvStrip').innerHTML = [
+    ['Project', project || '—'],
+    ['Asset',   asset   || '—'],
+    ['Comments', String(count)],
+  ].map(([k,v]) => `
+    <div class="csv-cell">
+      <div class="csv-key">${k}</div>
+      <div class="csv-val">${esc(v)}</div>
+    </div>
+  `).join('');
+}
+
+function renderComments(tree) {
+  let html = '';
+  for (const c of tree) {
+    html += commentHtml(c, false);
+    for (const r of c.replies) html += commentHtml(r, true);
+  }
+  el('commentsList').innerHTML = html || '<div class="comment"><div class="c-body" style="color:var(--muted)">No comments found.</div></div>';
+}
+
+function commentHtml(c, isReply) {
+  const tc   = c.timecode ? `<span class="c-tc">${esc(c.timecode)}</span><span class="c-sep"> — </span>` : '';
+  const icon = isReply ? '<span class="c-icon">↳</span>' : '<span class="c-icon">☐</span>';
+  return `
+    <div class="comment${isReply ? ' reply' : ''}">
+      ${icon}
+      <div class="c-body">
+        <div class="c-meta">${tc}<span class="c-author">${esc(c.author)}${c.text ? ':' : ''}</span></div>
+        <div class="c-text">${esc(c.text)}</div>
+      </div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Title suggestion
+// ─────────────────────────────────────────────────────────────────────────────
+function suggestTitle(project, asset) {
+  const name = (asset || '').replace(/\.[^/.]+$/, '').trim();
+  if (project && name) return `${project} — ${name} Revisions`;
+  if (name)    return `${name} — Client Revisions`;
+  if (project) return `${project} — Client Revisions`;
+  return 'Client Revisions';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Notion API
+// ─────────────────────────────────────────────────────────────────────────────
+async function notionFetch(endpoint, opts = {}) {
+  const key   = ls('notion_key');
+  const proxy = ls('notion_proxy').replace(/\/$/, '');
+  const base  = proxy
+    ? `${proxy}/https://api.notion.com/v1`
+    : 'https://api.notion.com/v1';
+
+  const resp = await fetch(`${base}/${endpoint}`, {
+    ...opts,
+    headers: {
+      'Authorization':  `Bearer ${key}`,
+      'Notion-Version': NOTION_VER,
+      'Content-Type':   'application/json',
+      ...(opts.headers || {}),
+    },
+  });
+  const data = await resp.json();
+  if (!resp.ok) throw new Error(data.message || `API error ${resp.status}`);
+  return data;
+}
+
+async function fetchEpisodes() {
+  const dbId = ls('notion_content_db') || DEFAULTS.contentDb;
+  const btn  = el('refreshEpisodes');
+  const sel  = el('episodeSelect');
+
+  btn.disabled    = true;
+  btn.textContent = '…';
+
+  try {
+    let results = [], cursor = null;
+    do {
+      const body = {
+        filter: { property: 'Level', select: { equals: 'Episode' } },
+        sorts:  [{ property: 'Name', direction: 'ascending' }],
+        page_size: 100,
+      };
+      if (cursor) body.start_cursor = cursor;
+      const data = await notionFetch(`databases/${dbId}/query`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      results = results.concat(data.results);
+      cursor  = data.has_more ? data.next_cursor : null;
+    } while (cursor);
+
+    sel.innerHTML = '<option value="">— Select episode —</option>';
+    for (const page of results) {
+      const opt = document.createElement('option');
+      opt.value       = page.id;
+      opt.textContent = pageTitle(page);
+      sel.appendChild(opt);
+    }
+    if (!results.length) sel.innerHTML = '<option value="">No episodes found</option>';
+  } catch (err) {
+    sel.innerHTML = `<option value="">Error: ${esc(err.message)}</option>`;
+    showStatus(`Could not load episodes: ${err.message}`, 'error');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = '↻ Refresh';
+  }
+}
+
+function pageTitle(page) {
+  for (const p of Object.values(page.properties)) {
+    if (p.type === 'title' && p.title.length) return p.title[0].plain_text;
+  }
+  return 'Untitled';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Build Notion blocks
+// ─────────────────────────────────────────────────────────────────────────────
+function buildBlocks(tree) {
+  const blocks = [];
+  for (const c of tree) {
+    // Heading 3: timecode as section anchor (fall back to author if no timecode)
+    blocks.push(heading3Block(c.timecode || c.author || 'Comment'));
+    // Checkbox for the top-level comment
+    blocks.push(todoBlock(fmtComment(c, false)));
+    // Checkboxes for replies, indented with ↳
+    for (const r of c.replies) blocks.push(todoBlock(fmtComment(r, true)));
+  }
+  return blocks;
+}
+
+function fmtComment(c, isReply) {
+  const prefix = isReply ? '↳ ' : '';
+  const author = c.author ? `${c.author}: ` : '';
+  return `${prefix}${author}${c.text}`;
+}
+
+function heading3Block(text) {
+  return {
+    object: 'block',
+    type: 'heading_3',
+    heading_3: { rich_text: [{ type: 'text', text: { content: text.slice(0, 2000) } }] },
+  };
+}
+
+function paragraphBlock() {
+  return {
+    object: 'block',
+    type: 'paragraph',
+    paragraph: { rich_text: [] },
+  };
+}
+
+function todoBlock(text) {
+  const chunks = [];
+  for (let i = 0; i < text.length; i += 2000) chunks.push(text.slice(i, i + 2000));
+  return {
+    object: 'block',
+    type: 'to_do',
+    to_do: {
+      rich_text: chunks.map(s => ({ type: 'text', text: { content: s } })),
+      checked: false,
+    },
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Create Notion task
+// ─────────────────────────────────────────────────────────────────────────────
+async function createTask() {
+  const title     = el('taskTitle').value.trim();
+  const episodeId = el('episodeSelect').value;
+  const tasksDb   = ls('notion_tasks_db') || DEFAULTS.tasksDb;
+  const apiKey    = ls('notion_key');
+
+  if (!apiKey)   return showStatus('No API key saved — open Settings first.', 'error');
+  if (!title)    return showStatus('Please enter a task title.', 'error');
+  if (!csvData)  return showStatus('No CSV loaded.', 'error');
+
+  const btn = el('createTask');
+  btn.disabled    = true;
+  btn.textContent = 'Creating…';
+  showStatus('Creating task in Notion…', 'loading');
+
+  try {
+    const allBlocks  = buildBlocks(csvData.tree);
+    const firstBatch = allBlocks.slice(0, 100);
+    const rest       = allBlocks.slice(100);
+
+    const props = {
+      Name:   { title: [{ type: 'text', text: { content: title } }] },
+      Type:   { select: { name: 'Revision Round' } },
+      Status: { select: { name: 'Not Started' } },
+    };
+    if (episodeId) props.Content = { relation: [{ id: episodeId }] };
+
+    const page = await notionFetch('pages', {
+      method: 'POST',
+      body: JSON.stringify({
+        parent:     { database_id: tasksDb },
+        properties: props,
+        children:   firstBatch,
+      }),
+    });
+
+    // Append overflow blocks in batches of 100
+    for (let i = 0; i < rest.length; i += 100) {
+      await notionFetch(`blocks/${page.id}/children`, {
+        method: 'PATCH',
+        body: JSON.stringify({ children: rest.slice(i, i + 100) }),
+      });
+    }
+
+    const url = page.url || `https://notion.so/${page.id.replace(/-/g,'')}`;
+    showStatus(`Task created — <a href="${url}" target="_blank">Open in Notion →</a>`, 'success');
+  } catch (err) {
+    showStatus(`Error: ${esc(err.message)}`, 'error');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Create Task in Notion';
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// File handling
+// ─────────────────────────────────────────────────────────────────────────────
+function handleFile(file) {
+  if (!file) return;
+  if (!file.name.toLowerCase().endsWith('.csv')) {
+    return showStatus('Please select a .csv file.', 'error');
+  }
+  const reader = new FileReader();
+  reader.onload = e => processCSV(e.target.result, file.name);
+  reader.readAsText(file);
+}
+
+function processCSV(raw, filename) {
+  try {
+    const rows = parseCSV(raw);
+    if (rows.length < 2) throw new Error('CSV has no data rows.');
+
+    const headers  = rows[0];
+    const dataRows = rows.slice(1);
+    const cols     = detectCols(headers);
+
+    const first   = dataRows[0] || [];
+    const project = cols.project >= 0 ? (first[cols.project]?.trim() || '') : '';
+    const asset   = cols.asset   >= 0 ? (first[cols.asset]?.trim()   || '') : filename.replace(/\.csv$/i,'');
+    const tree    = buildTree(dataRows, cols);
+    const total   = tree.reduce((n, c) => n + 1 + c.replies.length, 0);
+
+    csvData = { project, asset, tree };
+
+    renderStrip(project, asset, total);
+    renderComments(tree);
+    el('taskTitle').value = suggestTitle(project, asset);
+    el('previewSection').style.display = 'block';
+    el('statusMsg').style.display = 'none';
+
+    fetchEpisodes();
+  } catch (err) {
+    showStatus(`Could not parse CSV: ${esc(err.message)}`, 'error');
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Utilities
+// ─────────────────────────────────────────────────────────────────────────────
+function el(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function showStatus(msg, type) {
+  const s = el('statusMsg');
+  s.className     = `status ${type}`;
+  s.innerHTML     = msg;
+  s.style.display = 'block';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Boot
+// ─────────────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadSettings();
+
+  // Settings toggle
+  el('settingsToggle').addEventListener('click', () => {
+    const p = el('settingsPanel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  });
+  el('saveSettings').addEventListener('click', saveSettings);
+
+  // File input / browse
+  el('browseLink').addEventListener('click', () => el('fileInput').click());
+  el('dropzone').addEventListener('click', e => {
+    if (e.target.id !== 'browseLink') el('fileInput').click();
+  });
+  el('fileInput').addEventListener('change', e => handleFile(e.target.files[0]));
+
+  // Drag and drop
+  const dz = el('dropzone');
+  dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('over'); });
+  dz.addEventListener('dragleave', ()  => dz.classList.remove('over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault();
+    dz.classList.remove('over');
+    handleFile(e.dataTransfer.files[0]);
+  });
+
+  // Notion actions
+  el('refreshEpisodes').addEventListener('click', fetchEpisodes);
+  el('createTask').addEventListener('click', createTask);
+});
+</script>
+</body>
+</html>
