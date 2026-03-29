@@ -10,11 +10,11 @@
   --bg:        #f5f5f5;
   --surface:   #ffffff;
   --border:    #e5e7eb;
-  --border-focus: #2563eb;
-  --text:      #111827;
+  --border-focus: #E8511A;
+  --text:      #1A1A1A;
   --muted:     #6b7280;
-  --accent:    #2563eb;
-  --accent-dk: #1d4ed8;
+  --accent:    #E8511A;
+  --accent-dk: #cf4615;
   --del:       #ef4444;
   --r:         8px;
   --font:      -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -50,20 +50,9 @@ body {
 
 /* ── Logo ────────────────────────────────────────────────────────────── */
 .logo-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 180px;
-  height: 64px;
-  background: #f3f4f6;
-  border: 1.5px dashed #d1d5db;
-  border-radius: var(--r);
-  color: #9ca3af;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  display: block;
+  text-align: center;
   margin: 0 auto 40px;
-  user-select: none;
 }
 
 /* ── Form header ─────────────────────────────────────────────────────── */
@@ -88,6 +77,8 @@ body {
   color: var(--muted);
   line-height: 1.65;
 }
+.intro p + p { margin-top: 12px; }
+.intro strong { color: var(--text); font-weight: 600; }
 
 /* ── Column labels ───────────────────────────────────────────────────── */
 .col-labels {
@@ -142,7 +133,7 @@ input[type="text"] {
 }
 input[type="text"]:focus {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(232, 81, 26, 0.12);
 }
 input::placeholder { color: #d1d5db; }
 input.tc-field {
@@ -189,7 +180,7 @@ input.tc-field {
 .btn-add:hover {
   border-color: var(--accent);
   color: var(--accent);
-  background: rgba(37, 99, 235, 0.03);
+  background: rgba(232, 81, 26, 0.04);
 }
 
 /* ── Main buttons ────────────────────────────────────────────────────── */
@@ -344,12 +335,17 @@ input.tc-field {
 <div id="view-form" class="view">
   <div class="wrap">
 
-    <div class="logo-box" aria-hidden="true"><span>Your Logo</span></div>
+    <div class="logo-box"><img src="data:image/png;base64,BASE64_STRING_HERE" alt="Innit" style="height:40px;"></div>
 
     <div class="form-header">
       <p class="project-label" id="disp-project"></p>
       <h1 class="video-title" id="disp-video">Video Feedback</h1>
-      <p class="intro">Use the form below to leave your notes. Add a timecode for each comment — you'll find it in the bottom-left corner of the video player.</p>
+      <div class="intro">
+        <p>Use this form to send your feedback on <strong id="disp-video-intro"></strong> directly to the production team.</p>
+        <p><strong>Adding comments:</strong> Enter the timecode where the issue occurs and describe what you'd like changed. Use <em>Add comment</em> to add as many rows as you need.</p>
+        <p><strong>Saving:</strong> Hit <em>Save</em> at any time to store your progress. Your comments will be restored if you return to this page on the same device. You can also email yourself a link to resume on a different device.</p>
+        <p><strong>Submitting:</strong> When you're ready, hit <em>Review &amp; Submit</em> to check your comments before sending. Once submitted your feedback goes straight to the team — you'll see a confirmation on screen.</p>
+      </div>
     </div>
 
     <div class="col-labels" aria-hidden="true">
@@ -384,7 +380,7 @@ input.tc-field {
 <div id="view-review" class="view" hidden>
   <div class="wrap">
 
-    <div class="logo-box" aria-hidden="true"><span>Your Logo</span></div>
+    <div class="logo-box"><img src="data:image/png;base64,BASE64_STRING_HERE" alt="Innit" style="height:40px;"></div>
 
     <div class="review-header">
       <h2>Review your feedback</h2>
@@ -410,7 +406,7 @@ input.tc-field {
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 <div id="view-thanks" class="view" hidden>
   <div class="wrap center">
-    <div class="logo-box" aria-hidden="true"><span>Your Logo</span></div>
+    <div class="logo-box"><img src="data:image/png;base64,BASE64_STRING_HERE" alt="Innit" style="height:40px;"></div>
     <div class="thanks-icon" aria-hidden="true">✓</div>
     <h2>Feedback submitted</h2>
     <p class="thanks-msg">Thank you — your notes have been received. We'll review them and be in touch.</p>
@@ -462,6 +458,9 @@ function init() {
 
   // Review context line
   $('review-context').textContent = [PROJECT, VIDEO].filter(Boolean).join(' — ');
+
+  // Inline video name in instructions
+  $('disp-video-intro').textContent = VIDEO || 'this video';
 
   // Restore or start fresh
   const draft = _loadDraft();
