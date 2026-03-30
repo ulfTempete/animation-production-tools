@@ -11,7 +11,7 @@ Production tracking system for Innit Productions. Initially built for a 30-video
 
 ## Notion Databases (all prefixed APS)
 
-### APS Content
+### IPS Content
 Core database. Episodes, Sequences and Shots all live here — differentiated by the Level field.
 
 **Properties:**
@@ -28,9 +28,9 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - Due Date (date)
 - Description (rich text)
 - Frame.io Link (url)
-- Tasks (reverse relation from APS Tasks)
-- Notes (reverse relation from APS Notes)
-- Project (reverse relation from APS Projects)
+- Tasks (reverse relation from IPS Tasks)
+- Notes (reverse relation from IPS Notes)
+- Project (reverse relation from IPS Projects)
 - Open Tasks (rollup — count of linked tasks not Done or Approved)
 - Task Progress (rollup — average Progress % across linked tasks)
 - Is Episode (formula — hidden helper for rollups)
@@ -44,7 +44,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - Pending Review (Status = Pending Review)
 - At Risk (Status = On Hold)
 
-### APS Tasks
+### IPS Tasks
 **Properties:**
 - Name (title)
 - Type (select: Standard, Revision Round, Approval)
@@ -52,7 +52,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - Assignee (people)
 - Due Date (date)
 - Description (rich text)
-- Content (relation to APS Content)
+- Content (relation to IPS Content)
 - Parent Task (relation to same database — for subtasks)
 - Progress (number, percentage — used for revision round completion)
 - Is Open Task (formula — hidden helper)
@@ -63,15 +63,15 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - My Tasks (Assignee = me)
 - Revision Rounds (Type = Revision Round)
 
-### APS Notes
+### IPS Notes
 **Properties:**
 - Name (title)
 - Author (people)
 - Date (date)
 - Body (rich text)
-- Content (relation to APS Content)
+- Content (relation to IPS Content)
 
-### APS Projects
+### IPS Projects
 **Properties:**
 - Name (title)
 - Status (select: Active, On Hold, Complete, Archived)
@@ -80,7 +80,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - Revisions Used (number — rounds used so far)
 - Total Videos (rollup — count of linked Episodes)
 - Total Open Tasks (rollup — sum of open tasks across linked content)
-- Videos (relation to APS Content)
+- Videos (relation to IPS Content)
 - Brief, Client Contacts, Key Dates, Instructions, Links (rich text — hidden from properties, used in page body)
 
 **Template:** "New Project" template set as default — includes page body with Client Contacts, Brief, Key Dates, Instructions, Links headings plus linked Videos view.
@@ -92,7 +92,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 ## Client-Facing Tools
 
 ### frameio-to-notion.html
-Frame.io CSV converter. Drag-and-drop CSV, preview comments with replies nested, select episode, create Revision Round task in APS Tasks.  
+Frame.io CSV converter. Drag-and-drop CSV, preview comments with replies nested, select episode, create Revision Round task in IPS Tasks.  
 - Runs locally via start.sh (CORS proxy on localhost:8080)
 - Timecodes shown as H3 headings, comments as checkbox items, replies with ↳
 
@@ -102,7 +102,7 @@ Client feedback form. Clients submit timecoded feedback without logging in.
 - Timecode auto-formats as digits are typed
 - Save button: stores to localStorage + offers mailto link to resume on another device
 - Review step before submission
-- Submits to APS Tasks as Revision Round task via Cloudflare Worker
+- Submits to IPS Tasks as Revision Round task via Cloudflare Worker
 - Innit branding applied (orange #E8511A, charcoal #1A1A1A, logo embedded as base64)
 - Mobile responsive
 
@@ -113,20 +113,20 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 ---
 
 ## Key Design Decisions
-- Single APS Content database with Level field (not separate databases per level)
+- Single IPS Content database with Level field (not separate databases per level)
 - Per-stage status columns inspired by ShotGrid pipeline step view
 - Eight-value status list — "Ready to Start" distinguishes clear-to-begin from waiting; "Omitted" for cut shots
 - Status Note field for context when status alone isn't enough
 - Task Type field (Standard / Revision Round / Approval) enables reporting on revision round count
 - Built fresh rather than inheriting Ultimate Brain complexity — borrowed only the Parent Task / Sub-Tasks relation pattern
-- APS prefix keeps production databases distinct in the workspace
+- IPS prefix keeps production databases distinct in the workspace
 - Innit branding: orange #E8511A, charcoal #1A1A1A
 
 ---
 
 ## Database IDs
-- APS Tasks: 33119ff7-94ee-817a-b249-ccca6d2df580
-- APS Content: 33119ff7-94ee-8110-8df4-fbc98620bf45
+- IPS Tasks: 33119ff7-94ee-817a-b249-ccca6d2df580
+- IPS Content: 33119ff7-94ee-8110-8df4-fbc98620bf45
 
 ---
 
@@ -142,4 +142,4 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 
 ## Session Log
 - Session 1 (29-30 Mar): Designed system architecture, built all four Notion databases via API, built Frame.io CSV converter, built client feedback form, pushed all tools to GitHub
-- Session 2 (31 Mar): Deployed Cloudflare Worker, fixed client feedback form (logo removed, comment field fixed to textarea, timecode auto-pad on blur, instructions updated), tested form end to end — feedback appears correctly in APS Tasks
+- Session 2 (31 Mar): Deployed Cloudflare Worker, fixed client feedback form (logo removed, comment field fixed to textarea, timecode auto-pad on blur, instructions updated), tested form end to end — feedback appears correctly in IPS Tasks
