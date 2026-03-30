@@ -114,7 +114,8 @@ body {
   width: 122px;
   flex-shrink: 0;
 }
-.tx { flex: 1; min-width: 0; }
+.tx { flex: 1; min-width: 0; resize: none; overflow: hidden; line-height: 1.5; font-family: var(--font); font-size: 14px; padding: 9px 11px; border: 1.5px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+.tx:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(232, 81, 26, 0.12); }
 
 /* ── Inputs ──────────────────────────────────────────────────────────── */
 input[type="text"] {
@@ -535,12 +536,15 @@ function addRow(tc, text) {
   tcInput.addEventListener('keydown', onTcKeydown);
   tcInput.addEventListener('blur', onTcBlur);
 
-  const txtInput = el('input');
-  txtInput.type        = 'text';
+  const txtInput = el('textarea');
   txtInput.className   = 'tx';
   txtInput.placeholder = 'Your comment…';
   txtInput.value       = _esc(text);
   txtInput.setAttribute('aria-label', 'Comment');
+  txtInput.rows = 1;
+  txtInput.style.resize = 'none';
+  txtInput.style.overflow = 'hidden';
+  txtInput.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; });
   txtInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') { e.preventDefault(); addRow(); }
   });
