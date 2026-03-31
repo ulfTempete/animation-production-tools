@@ -9,7 +9,7 @@ Production tracking system for Innit Productions. Initially built for a 30-video
 
 ---
 
-## Notion Databases (all prefixed APS)
+## Notion Databases (all prefixed IPS)
 
 ### IPS Content
 Core database. Episodes, Sequences and Shots all live here — differentiated by the Level field.
@@ -108,7 +108,7 @@ Client feedback form. Clients submit timecoded feedback without logging in.
 
 ### notion-proxy.js (Cloudflare Worker)
 Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as secret.  
-**Status: NOT YET DEPLOYED** — WORKER_URL placeholder still in client-feedback.html
+**Status: DEPLOYED** — https://notion-proxy.ole-1b2.workers.dev
 
 ---
 
