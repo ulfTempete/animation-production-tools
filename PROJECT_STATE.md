@@ -143,3 +143,37 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 ## Session Log
 - Session 1 (29-30 Mar): Designed system architecture, built all four Notion databases via API, built Frame.io CSV converter, built client feedback form, pushed all tools to GitHub
 - Session 2 (31 Mar): Deployed Cloudflare Worker, fixed client feedback form (logo removed, comment field fixed to textarea, timecode auto-pad on blur, instructions updated), tested form end to end — feedback appears correctly in IPS Tasks
+
+---
+
+## Session 2 additions (31 Mar)
+
+### Dashboards built
+- IPS Home — Active Projects, In Progress, Pending Review sections
+- IPS Dashboard — Projects — Active, On Hold, Completed, Archived views
+- IPS Dashboard — Videos — All Videos, Episodes Only, In Progress, Pending Review, At Risk views
+- IPS Dashboard — Tasks — All Tasks, My Tasks, Revision Rounds, Not Started views
+
+### Navigation
+- Callout nav block on all four dashboard pages: IPS Home | Projects | Videos | Tasks
+
+### Icon & colour system
+- Home: house, orange
+- Projects: folder, blue
+- Videos: film grid, green
+- Tasks: checklist, purple
+- Databases: stack, red (all DB pages)
+
+### Naming
+- Databases renamed from APS to IPS prefix
+- Databases suffixed with "DB" (e.g. IPS Tasks DB)
+- Databases moved into "Innit Databases" page inside "Innit Production System"
+
+### Still to do
+- Admin nav at bottom of IPS Home (links to Innit Databases)
+- Record-level icons (purple for tasks, colour by level for content)
+- Naming convention for content records (flag when real data entry begins)
+- Label colour consistency (flag same time)
+- Delete test data and enter real project data
+- Link Broader Impacts episodes to Broader Impacts project record
+- Review where templates should be used (content records, task types, project pages)
