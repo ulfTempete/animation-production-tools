@@ -177,3 +177,36 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 - Delete test data and enter real project data
 - Link Broader Impacts episodes to Broader Impacts project record
 - Review where templates should be used (content records, task types, project pages)
+
+---
+
+## Session 3 additions (31 Mar afternoon)
+
+### Gallery view
+- Added Visual Overview gallery view to IPS Dashboard — Videos
+- Shows Screenshot property as card cover, Status visible on card
+- Screenshot (Files & Media) property added to IPS Content DB
+
+### Status label colours
+- Applied traffic light colour scheme to all status fields in IPS Content DB
+- Not Started — grey, Ready to Start — blue, In Progress — purple
+- Pending Review — yellow, Approved — green, On Hold — red
+- Omitted — brown, Delivered — green
+- Same colours applied to Storyboard Status, Style Frames Status, Animation Status, Post Status
+
+### Templates (in progress)
+- New Episode template created in IPS Content DB (green film icon, Level = Episode)
+- New Sequence and New Shot templates still to be created
+- New Task templates (Standard, Revision Round, Approval) still to be created
+- New Project template already exists (created in Session 1)
+
+### Still to do
+- Bespoke icons at 280x280px — Ulf designing (Episode, Sequence, Shot, Task types, Note)
+- Complete IPS Content DB templates (Sequence, Shot)
+- Complete IPS Tasks DB templates (Standard, Revision Round, Approval)
+- Notes dashboard — decision pending
+- Admin nav at bottom of IPS Home
+- Sidebar nav consideration (Aram Atkinson two-column style)
+- Delete test data and enter real Broader Impacts project data
+- Naming convention for content records (flag when real data entry begins)
+- Label colour consistency — done for status fields
