@@ -210,3 +210,10 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 - Delete test data and enter real Broader Impacts project data
 - Naming convention for content records (flag when real data entry begins)
 - Label colour consistency — done for status fields
+
+## Database IDs (updated)
+- IPS Projects DB: 33119ff7-94ee-815d-b537-c658ccaf2982
+- IPS Content DB: 33119ff7-94ee-8110-8df4-fbc98620bf45
+- IPS Tasks DB: 33119ff7-94ee-817a-b249-ccca6d2df580
+- IPS Notes DB (old): 33119ff7-94ee-81a8-80e2-d671570c2ae0
+- IPS Notes DB v2: 33519ff7-94ee-8167-b40c-ca4055f4bd56
