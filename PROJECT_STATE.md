@@ -253,3 +253,35 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 - Delete test data, enter real Broader Impacts project data
 - Naming convention for content records (flag when real data entry begins)
 - Label colour consistency — done for status fields
+
+---
+
+## Session 4 continued (2 Apr afternoon)
+
+### Notion Layout system — fully researched
+Layout has four areas:
+- Heading: up to 4 pinned properties shown horizontally under title
+- Property group: all other properties, show/hide with eye icon, can have collapsible sections
+- Details panel: hidden sidebar, opened via "View details", good for helper fields
+- Page content: body of the page (tabs in Tabbed mode)
+Apply to all pages covers ALL records and templates in the database at once.
+
+### IPS Content DB layout set
+- Pinned: Status, Level, Assignee, Due Date
+- Property group visible: Animation Status, Description, Frame.io Link, Open Tasks, Parent, Post Status, Screenshot, Start Date, Status Note, Storyboard Status, Style Frames Status
+- Hidden: Is Episode, Open Tasks Count, Task Progress, Tasks, Project
+- Structure: Tabbed
+
+### Still to do
+- IPS Tasks DB layout (pin: Status, Type, Assignee, Due Date; hide: Is Open Task)
+- IPS Notes DB layout (pin: Type, Project, Date, Author; hide: Archived)
+- IPS Projects DB layout (pin: Status, Owner, Frame.io Link, Total Open Tasks)
+- Delete test content records and enter real Broader Impacts data
+- Rename Notion integration to "Innit Production System"
+- Task/Project linking decision (deferred)
+- Bespoke icons at 280x280px
+- IPS Guide / instruction manual
+- Naming convention for content records
+
+### Note for next session
+Always search Notion docs before implementing layout/UI features to avoid rework.
