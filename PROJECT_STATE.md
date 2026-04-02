@@ -217,3 +217,39 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 - IPS Tasks DB: 33119ff7-94ee-817a-b249-ccca6d2df580
 - IPS Notes DB (old): 33119ff7-94ee-81a8-80e2-d671570c2ae0
 - IPS Notes DB v2: 33519ff7-94ee-8167-b40c-ca4055f4bd56
+
+---
+
+## Session 4 additions (2 Apr)
+
+### IPS Notes DB rebuilt
+- Created IPS Notes DB v2 with Type (General, Brief, Meeting, Directive, Asset), Project relation, Content relation, Author, Date, URL, Favourite, Archived
+- Deleted old IPS Notes DB
+- Notes link to Projects (auto-links when created from project page) and Content/Episodes (manual assignment)
+- Layout set to Tabbed, showing only Author, Date, Project, Type — applied to all pages
+
+### Note templates created
+- Meeting: [Date] — Agenda, Meeting Notes, Action Items sections
+- Brief — Overview, Key Requirements, References & Links sections
+- Notice — Notice, Applies To, Effective From sections
+- General — empty
+
+### IPS Dashboard — Notes built
+- Views: All Notes, By Project, By Episode, Important Notices
+- Added to synced nav block
+
+### Nav updated
+- All five dashboards now use a synced callout block for navigation
+- Synced block means any update propagates to all dashboards automatically
+
+### Still to do
+- Rename Notion integration from "Animation Production System" to "Innit Production System"
+- Task/Project linking decision (deferred — test runs first)
+- Notices DB (deferred — notes system first)
+- Bespoke icons at 280x280px (Ulf designing)
+- Complete IPS Content DB templates (Sequence, Shot)
+- Complete IPS Tasks DB templates (Standard, Revision Round, Approval)
+- IPS Guide / instruction manual (build incrementally)
+- Delete test data, enter real Broader Impacts project data
+- Naming convention for content records (flag when real data entry begins)
+- Label colour consistency — done for status fields
