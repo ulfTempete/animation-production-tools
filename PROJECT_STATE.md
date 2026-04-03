@@ -1,5 +1,50 @@
 # Animation Production System — Project State
 
+---
+
+## ⚠️ RULES — READ BEFORE EVERY SESSION
+
+These rules exist because of repeated mistakes. Follow them without exception.
+
+### Notion API limitations
+The Notion API **cannot** do any of the following — never suggest it for these:
+- Set page layouts (Tabbed, pinned properties, hidden properties)
+- Create or configure views (filters, sorts, grouping, property visibility)
+- Set label colours on select fields
+- Set icons or cover images on database pages
+- Apply templates to existing records
+
+**All UI and layout work must be done manually in Notion.**
+
+### Notion UI — check before advising
+Never advise on Notion UI behaviour from memory. If uncertain about how any Notion feature works — list view properties, conditional visibility, filter options, date fields, layout options, anything — **search the Notion help docs before answering.** Guessing wastes the user's time.
+
+### Known Notion constraints (confirmed)
+- **List view:** properties do display inline at the far right, but only if they contain data. Empty fields won't show. Confirm data exists before troubleshooting visibility.
+- **Conditional property visibility:** not possible in Notion. Properties cannot be shown/hidden based on the value of another field.
+- **Date vs Created Time:** Date is a manually entered field. Created Time is an automatic system property. These are different — do not conflate them.
+- **Layout order:** always set Tabbed structure first, then pin properties, then set visibility. Confirm this order before walking through steps.
+- **Page body content:** rich text body content (e.g. Notes Body field) is never visible inline in any database view type. Users must click to open the record.
+
+### Note types — exact values
+The IPS Notes DB Type field has exactly these five options:
+**General, Brief, Meeting, Directive, Asset**
+There is no "Notice" type. Directives are Type = Directive.
+
+### Communication
+- User has ADHD — deliver information one step at a time, not in long lists
+- Do not suggest steps or options without being confident they are correct
+- If something needs to be looked up first, say so and look it up before proceeding
+
+### End of session — CC update routine
+At the end of every session:
+1. Compile all changes made during the session
+2. User opens Claude Code in Terminal: `cd /Users/olesturm/animation-production-tools` then `claude`
+3. Instruct Claude Code to update `project_state.md` with the session notes
+4. Claude Code commits and pushes to GitHub
+
+---
+
 ## Overview
 Production tracking system for Innit Productions. Initially built for a 30-video animation project, designed as a reusable system for all future projects.
 
@@ -9,7 +54,7 @@ Production tracking system for Innit Productions. Initially built for a 30-video
 
 ---
 
-## Notion Databases (all prefixed IPS)
+## Notion Databases
 
 ### IPS Content DB
 Core database. Episodes, Sequences and Shots all live here — differentiated by the Level field.
@@ -85,7 +130,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 **Views:**
 - Default view (table)
 - All Tasks
-- My Tasks (Assignee = me)
+- My Tasks (Assignee = Me)
 - Revision Rounds (Type = Revision Round)
 
 **Templates:** Standard, Revision Round, Approval — still to create
@@ -95,10 +140,10 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 ### IPS Notes DB v2
 **Properties:**
 - Name (title)
-- Type (select: General, Brief, Meeting, Directive, Asset)
+- Type (select: General, Brief, Meeting, Directive, Asset) ← exact values, no others
 - Author (people)
-- Date (date)
-- Body (rich text — page content)
+- Date (date — manually entered)
+- Body (rich text — page content, not visible inline in any view)
 - Project (relation to IPS Projects)
 - Content (relation to IPS Content)
 - URL (url)
@@ -142,7 +187,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 
 **Template:** "New Project" default — includes page body with Client Contacts, Brief, Key Dates, Instructions, Links headings plus linked Videos view.
 
-**Test data:** "Broader Impacts" project record exists.
+**Test data:** "Broader Impacts" project record exists — test data to be deleted before real data entry.
 
 ---
 
@@ -150,8 +195,11 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 
 All dashboards use a synced callout nav block. Any update to the nav propagates to all dashboards automatically.
 
+**Nav links:** Home | Projects Dashboard | Videos Dashboard | Tasks Dashboard | Notes Dashboard | Personal Dashboard
+
 ### Home (formerly IPS Home)
 Producer-level overview. Sections: Active Projects, In Progress, Pending Review.
+Note: Consider restricting visibility to producer only (deferred).
 
 ### Projects Dashboard
 Views: Active, On Hold, Completed, Archived.
@@ -166,21 +214,25 @@ Views: All Tasks, My Tasks, Revision Rounds, Not Started.
 Views: All Notes, By Project, By Episode, Important Notices.
 
 ### Personal Dashboard
-**Purpose:** Each team member's default startup page — shows everything relevant to them. Single filtered dashboard (not per-person pages) for scalability across projects.
+**Purpose:** Each team member's default startup page. Single filtered dashboard — not per-person pages — for scalability across projects.
+
+**To set as startup page:** Settings → My notifications & settings → Open on startup.
 
 **Sections:**
-1. **Important Notes** — IPS Notes DB, filtered Type = Directive, list view. Body content not visible inline — users must click to read full directive. Date display outstanding (see Outstanding Items).
+1. **Important Notes** — IPS Notes DB, filtered Type = Directive, list view
+   - Body content is NOT visible inline — users must click to read full directive (this is a Notion constraint, not a config issue)
+   - Date display: outstanding decision — add Created Time property, or require manual Date entry when creating a directive
+   - Instruction manual note: directive titles must be descriptive; users must click to read full content
 2. **My Tasks** — IPS Tasks DB, filtered Assignee = Me. Property visibility not yet configured.
 3. **My Content** — IPS Content DB, filtered Assignee = Me. Property visibility not yet configured.
 4. **My Notes** — IPS Notes DB, filtered Author = Me. Property visibility not yet configured.
 5. **All Notes** — IPS Notes DB, unfiltered, grouped by Content. Property visibility not yet configured.
 
 **Still to do:**
-- Directive date display: decide between adding Created Time property or using manual Date field
+- Resolve directive date display (Created Time vs manual Date)
 - Configure property visibility for sections 2–5
-- Add to synced nav block
-- Assign icon
-- Each team member to set as startup page via Settings → My notifications & settings → Open on startup
+- Add Personal Dashboard to synced nav block
+- Assign icon to Personal Dashboard
 
 ---
 
@@ -240,16 +292,16 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 ---
 
 ## IPS Guide / Instruction Manual Notes
-*(To be built incrementally — items to include:)*
+*(To be built incrementally)*
 - Directive titles must be descriptive — the title is the only thing visible in the Personal Dashboard without clicking
 - Users must click a Directive to read the full content
-- Each team member should set Personal Dashboard as their startup page
+- Each team member should set Personal Dashboard as their startup page via Settings → My notifications & settings → Open on startup
 
 ---
 
 ## Outstanding Items
-1. **Personal Dashboard** — directive date display: decide between Created Time property or manual Date field
-2. **Personal Dashboard** — property visibility for My Tasks, My Content, My Notes, All Notes sections
+1. **Personal Dashboard** — resolve directive date display (Created Time property vs manual Date field)
+2. **Personal Dashboard** — configure property visibility for My Tasks, My Content, My Notes, All Notes sections
 3. **Personal Dashboard** — add to synced nav block
 4. **Personal Dashboard** — assign icon
 5. **Home dashboard** — consider restricting visibility to producer only (deferred)
@@ -262,7 +314,6 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 12. **Rename Notion integration** from "Animation Production System" to "Innit Production System"
 13. **Admin nav** at bottom of Home dashboard
 14. **Sidebar nav consideration** (Aram Atkinson two-column style)
-15. **CC update routine** — document the standard process for updating project_state.md via Claude Code at end of each session
 
 ---
 
@@ -270,6 +321,6 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 - Session 1 (29-30 Mar): Designed system architecture, built all four Notion databases via API, built Frame.io CSV converter, built client feedback form, pushed all tools to GitHub
 - Session 2 (31 Mar): Deployed Cloudflare Worker, fixed client feedback form (logo removed, comment field fixed to textarea, timecode auto-pad on blur, instructions updated), tested form end to end
 - Session 3 (31 Mar afternoon): Added gallery view to Videos Dashboard, applied status label colour scheme to all status fields, started IPS Content DB templates (New Episode created)
-- Session 4 (2 Apr): Rebuilt IPS Notes DB as v2 with Type field and new properties, created note templates, built Notes Dashboard, updated synced nav to all five dashboards, researched Notion layout system, set IPS Content DB layout
+- Session 4 (2 Apr): Rebuilt IPS Notes DB as v2, created note templates, built Notes Dashboard, updated synced nav, researched Notion layout system, set IPS Content DB layout
 - Session 4 continued (2 Apr afternoon): Fully researched Notion layout system, set IPS Content DB layout (Tabbed, pinned properties, hidden helpers)
-- Session 5 (3 Apr): Installed Claude Code on MacPro. Completed DB layouts for IPS Tasks DB, IPS Notes DB, IPS Projects DB. Renamed dashboards (removed IPS prefix). Built Personal Dashboard — five sections structured, Important Notes section configured (list view, Type = Directive filter). Property visibility for sections 2–5 outstanding.
+- Session 5 (3 Apr): Installed Claude Code on MacPro. Completed DB layouts for IPS Tasks DB, IPS Notes DB, IPS Projects DB (all Tabbed, properties pinned and hidden). Renamed dashboards — IPS prefix removed. Built Personal Dashboard with five sections; Important Notes section configured (list view, Type = Directive). Property visibility for sections 2–5 outstanding.
