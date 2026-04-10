@@ -82,7 +82,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - Screenshot (Files & Media)
 - Tasks (reverse relation from IPS Tasks)
 - Notes (reverse relation from IPS Notes)
-- Project (reverse relation from IPS Projects)
+- Project (reverse relation from IPS Projects — IPS Tasks DB also has a direct Project rollup via Video Elements relation)
 - Open Tasks (rollup — count of linked tasks not Done or Approved)
 - Task Progress (rollup — average Progress % across linked tasks)
 - Is Episode (formula — hidden helper for rollups)
