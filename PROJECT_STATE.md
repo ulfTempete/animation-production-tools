@@ -173,7 +173,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 **Properties:**
 - Name (title)
 - Status (select: Active, On Hold, Complete, Archived)
-- Frame.io Link (url)
+- Video Link (url)
 - Revision Allowance (number — agreed revision rounds)
 - Revisions Used (number — rounds used so far)
 - Total Videos (rollup — count of linked Episodes)
@@ -181,11 +181,13 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - Videos (relation to IPS Content)
 - Brief, Client Contacts, Key Dates, Instructions, Links (rich text — in page body)
 
-**Layout:**
-- Structure: Tabbed
-- Pinned: Status, Owner, Frame.io Link, Total Open Tasks
+**Layout (set Session 8):** Property group moved to panel, page discussions turned off. DB locked.
+- Pinned: Status, Owner, Video Link, Total Open Tasks
 
-**Template:** "New Project" default — includes page body with Client Contacts, Brief, Key Dates, Instructions, Links headings plus linked Videos view.
+**Template:** "New Project" template (default) — rebuilt Session 8. Includes:
+- NAV toggle (collapsed by default): hyperlinks to Projects Dashboard and Personal Dashboard, block links to Tasks and Notes sections within the page
+- Tasks section: linked IPS Tasks DB with List, Board, and Calendar views; filtered to current project; grouped by Status; visible properties: Status, Due Date, Assignee; database title hidden on all views
+- Notes section: linked IPS Notes DB with List view; filtered to current project; visible properties: Type, Created Time, Author; database title hidden
 
 **Test data:** "Broader Impacts" project record exists — test data to be deleted before real data entry.
 
@@ -314,6 +316,11 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 12. **Rename Notion integration** from "Animation Production System" to "Innit Production System"
 13. **Admin nav** at bottom of Home dashboard
 14. **Sidebar nav consideration** (Aram Atkinson two-column style)
+15. **Rename "Name" title fields** in all IPS databases to "Title"
+16. **Notion automation** — Archived checkbox on IPS Projects DB cascades to related Tasks and Notes (when real data entry begins)
+17. **End-of-build review** — compare IPS against Thomas Frank UB and Humaniaq APMH findings (reference PDF compiled)
+18. **GitHub push from Mac Studio** — credentials not yet configured
+19. **Combined Innit Admin dashboard** — spanning Client Comms + Dates DBs
 
 ---
 
@@ -324,3 +331,4 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 - Session 4 (2 Apr): Rebuilt IPS Notes DB as v2, created note templates, built Notes Dashboard, updated synced nav, researched Notion layout system, set IPS Content DB layout
 - Session 4 continued (2 Apr afternoon): Fully researched Notion layout system, set IPS Content DB layout (Tabbed, pinned properties, hidden helpers)
 - Session 5 (3 Apr): Installed Claude Code on MacPro. Completed DB layouts for IPS Tasks DB, IPS Notes DB, IPS Projects DB (all Tabbed, properties pinned and hidden). Renamed dashboards — IPS prefix removed. Built Personal Dashboard with five sections; Important Notes section configured (list view, Type = Directive). Property visibility for sections 2–5 outstanding.
+- Session 8 (13 Apr): Renamed Frame.io Link → Video Link in IPS Projects DB. Rebuilt New Project template (NAV toggle, Tasks section with List/Board/Calendar views, Notes section with List view, all filtered to current project, DB titles hidden). Updated layout (property group moved to panel, discussions off). Locked IPS Projects DB. Compiled Thomas Frank UB reference PDF.
