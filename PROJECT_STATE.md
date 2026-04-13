@@ -326,6 +326,20 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 17. **End-of-build review** — compare IPS against Thomas Frank UB and Humaniaq APMH findings (reference PDF compiled)
 18. **GitHub push from Mac Studio** — credentials not yet configured
 19. **Combined Innit Admin dashboard** — spanning Client Comms + Dates DBs
+20. **Delete "DELETE ME" view** from IPS Tasks DB (manual — MCP cannot delete views)
+21. **Plan next session** around using MCP for remaining IPS build work
+
+---
+
+## Session 8 continued (13 Apr afternoon)
+
+### Notion MCP
+- Notion MCP confirmed working in Claude for Mac — already connected via OAuth (was pre-configured)
+- Test view created and deleted successfully on IPS Tasks DB via MCP
+- MCP can create views with filters, sorts, grouping, and visible properties configured automatically
+- **This changes our approach:** use MCP first for all remaining view and database configuration
+- Note: MCP cannot delete views — any cleanup of unwanted views must be done manually in Notion
+- "DELETE ME" test view left in IPS Tasks DB — needs manual deletion
 
 ---
 
@@ -336,4 +350,4 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 - Session 4 (2 Apr): Rebuilt IPS Notes DB as v2, created note templates, built Notes Dashboard, updated synced nav, researched Notion layout system, set IPS Content DB layout
 - Session 4 continued (2 Apr afternoon): Fully researched Notion layout system, set IPS Content DB layout (Tabbed, pinned properties, hidden helpers)
 - Session 5 (3 Apr): Installed Claude Code on MacPro. Completed DB layouts for IPS Tasks DB, IPS Notes DB, IPS Projects DB (all Tabbed, properties pinned and hidden). Renamed dashboards — IPS prefix removed. Built Personal Dashboard with five sections; Important Notes section configured (list view, Type = Directive). Property visibility for sections 2–5 outstanding.
-- Session 8 (13 Apr): Renamed Frame.io Link → Video Link in IPS Projects DB. Rebuilt New Project template (NAV toggle, Tasks section with List/Board/Calendar views, Notes section with List view, all filtered to current project, DB titles hidden). Updated layout (property group moved to panel, discussions off). Locked IPS Projects DB. Compiled Thomas Frank UB reference PDF.
+- Session 8 (13 Apr): Renamed Frame.io Link → Video Link in IPS Projects DB. Rebuilt New Project template (NAV toggle, Tasks section with List/Board/Calendar views, Notes section with List view, all filtered to current project, DB titles hidden). Updated layout (property group moved to panel, discussions off). Locked IPS Projects DB. Compiled Thomas Frank UB reference PDF. Confirmed Notion MCP working in Claude for Mac (OAuth, pre-configured) — can create views with filters/sorts/grouping/properties; MCP to be used for all remaining view/DB configuration.
