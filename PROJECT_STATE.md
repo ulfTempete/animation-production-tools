@@ -1,3 +1,8 @@
+## RULES
+- Check first, then answer. Verify ALL factual claims against primary sources before responding — plan requirements, feature availability, UI behaviour, API capabilities. No exceptions.
+
+---
+
 # Animation Production System — Project State
 
 ---
