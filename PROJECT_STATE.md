@@ -327,7 +327,9 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 18. **GitHub push from Mac Studio** — credentials not yet configured
 19. **Combined Innit Admin dashboard** — spanning Client Comms + Dates DBs
 20. **Delete "DELETE ME" view** from IPS Tasks DB (manual — MCP cannot delete views)
-21. **Plan next session** around using MCP for remaining IPS build work
+21. **Personal Dashboard views** — still need configuring (next session)
+22. **My Tasks view** — manually add Assignee filter (Ole) in Notion (Filter → Assignee → Ole)
+23. **Consider upgrading to Max plan** or enabling extra usage given heavy MCP usage pattern
 
 ---
 
@@ -343,6 +345,41 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 
 ---
 
+## Session 9 additions (14 Apr)
+
+### Dashboard views configured via MCP
+
+**Tasks Dashboard**
+- All Tasks: sorted by Due Date; shows Status, Type, Assignee, Due Date, Project
+- My Tasks: sorted by Due Date; Assignee filter needs manual setup in Notion (Filter → Assignee → Ole)
+- Revision Rounds: filtered to Type = Revision Round
+- Not Started: filtered to Status = Not Started
+
+**Projects Dashboard**
+- Fixed On Hold and Archived filters (both were incorrectly filtering for Active)
+- Added By Status list view (grouped by Status)
+
+**Notes Dashboard**
+- All views updated with correct filters and visible properties (Type, Created Time, Author, Project)
+- Important Notices filter fixed
+
+**Videos Dashboard**
+- Episodes: Level = Episode
+- Active: Status = In Progress
+- Review: Status = Pending Review
+- At Risk: Status = On Hold
+- Deleted unnamed broken view (manually)
+
+**IPS Home**
+- Active Projects, In Progress Videos, Pending Review — filters and visible properties tidied
+- In Progress and Pending Review filtered to Episode level only
+- Confirmed IPS Home = admin/producer view; Personal Dashboard = individual team member view
+
+### MCP usage note
+MCP calls are token-heavy. Start fresh sessions rather than continuing long ones to conserve usage allowance.
+
+---
+
 ## Session Log
 - Session 1 (29-30 Mar): Designed system architecture, built all four Notion databases via API, built Frame.io CSV converter, built client feedback form, pushed all tools to GitHub
 - Session 2 (31 Mar): Deployed Cloudflare Worker, fixed client feedback form (logo removed, comment field fixed to textarea, timecode auto-pad on blur, instructions updated), tested form end to end
@@ -351,3 +388,4 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 - Session 4 continued (2 Apr afternoon): Fully researched Notion layout system, set IPS Content DB layout (Tabbed, pinned properties, hidden helpers)
 - Session 5 (3 Apr): Installed Claude Code on MacPro. Completed DB layouts for IPS Tasks DB, IPS Notes DB, IPS Projects DB (all Tabbed, properties pinned and hidden). Renamed dashboards — IPS prefix removed. Built Personal Dashboard with five sections; Important Notes section configured (list view, Type = Directive). Property visibility for sections 2–5 outstanding.
 - Session 8 (13 Apr): Renamed Frame.io Link → Video Link in IPS Projects DB. Rebuilt New Project template (NAV toggle, Tasks section with List/Board/Calendar views, Notes section with List view, all filtered to current project, DB titles hidden). Updated layout (property group moved to panel, discussions off). Locked IPS Projects DB. Compiled Thomas Frank UB reference PDF. Confirmed Notion MCP working in Claude for Mac (OAuth, pre-configured) — can create views with filters/sorts/grouping/properties; MCP to be used for all remaining view/DB configuration.
+- Session 9 (14 Apr): Used MCP throughout to configure all dashboard views. Tasks Dashboard (All Tasks, My Tasks, Revision Rounds, Not Started), Projects Dashboard (fixed On Hold/Archived filters, added By Status list view), Notes Dashboard (all views with correct filters/properties), Videos Dashboard (Episodes, Active, Review, At Risk — deleted broken unnamed view manually), IPS Home (Active Projects, In Progress Videos, Pending Review — In Progress and Pending Review filtered to Episode level). Confirmed IPS Home = producer view, Personal Dashboard = individual view. Note: MCP calls are token-heavy — start fresh sessions for heavy MCP work.
