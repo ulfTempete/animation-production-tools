@@ -3,7 +3,7 @@
 
 ---
 
-# Animation Production System — Project State
+# Animation Production System — Project State (IPS v1.0)
 
 ---
 
@@ -61,7 +61,8 @@ Production tracking system for Innit Productions. Initially built for a 30-video
 
 ## Notion Databases
 
-### IPS Content DB
+### IPS Video Elements DB
+*(Renamed from IPS Content DB in Session 10)*
 Core database. Episodes, Sequences and Shots all live here — differentiated by the Level field.
 
 **Properties:**
@@ -122,7 +123,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - Assignee (people)
 - Due Date (date)
 - Description (rich text)
-- Content (relation to IPS Content)
+- Video Elements (relation to IPS Video Elements DB, formerly "Content")
 - Parent Task (relation to same database — for subtasks)
 - Progress (number, percentage — used for revision round completion)
 - Is Open Task (formula — hidden helper)
@@ -135,7 +136,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 **Views:**
 - Default view (table)
 - All Tasks
-- My Tasks (Assignee = Me)
+- My Tasks (Assignee = Me) — shows Name, Status, Type, Due Date, Video Elements (configured Session 10)
 - Revision Rounds (Type = Revision Round)
 
 **Templates:** Standard, Revision Round, Approval — still to create
@@ -150,7 +151,7 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - Date (date — manually entered)
 - Body (rich text — page content, not visible inline in any view)
 - Project (relation to IPS Projects)
-- Content (relation to IPS Content)
+- Video Elements (relation to IPS Video Elements DB, formerly "Content")
 - URL (url)
 - Favourite (checkbox)
 - Archived (checkbox)
@@ -231,7 +232,7 @@ Views: All Notes, By Project, By Episode, Important Notices.
    - Date display: outstanding decision — add Created Time property, or require manual Date entry when creating a directive
    - Instruction manual note: directive titles must be descriptive; users must click to read full content
 2. **My Tasks** — IPS Tasks DB, filtered Assignee = Me. Property visibility not yet configured.
-3. **My Content** — IPS Content DB, filtered Assignee = Me. Property visibility not yet configured.
+3. **My Video Elements** — IPS Video Elements DB, filtered Assignee = Me. Property visibility not yet configured.
 4. **My Notes** — IPS Notes DB, filtered Author = Me. Property visibility not yet configured.
 5. **All Notes** — IPS Notes DB, unfiltered, grouped by Content. Property visibility not yet configured.
 
@@ -307,8 +308,8 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 ---
 
 ## Outstanding Items
-1. **Personal Dashboard** — resolve directive date display (Created Time property vs manual Date field)
-2. **Personal Dashboard** — configure property visibility for My Tasks, My Content, My Notes, All Notes sections
+1. ~~**Personal Dashboard** — resolve directive date display~~ ✓ Done (Created Time and Date both added and configured as visible in Important Notes section)
+2. ~~**Personal Dashboard** — configure property visibility for My Tasks~~ ✓ Done (My Tasks view configured Session 10 — shows Name, Status, Type, Due Date, Video Elements). My Video Elements, My Notes, All Notes sections still outstanding.
 3. **Personal Dashboard** — add to synced nav block
 4. **Personal Dashboard** — assign icon
 5. **Home dashboard** — consider restricting visibility to producer only (deferred)
@@ -321,7 +322,7 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 12. **Rename Notion integration** from "Animation Production System" to "Innit Production System"
 13. **Admin nav** at bottom of Home dashboard
 14. **Sidebar nav consideration** (Aram Atkinson two-column style)
-15. **Rename "Name" title fields** in all IPS databases to "Title"
+15. **Rename "Name" title fields** in all IPS databases to "Title" *(also rename "My Content" section on Personal Dashboard to "My Video Elements" — done Session 10)*
 16. **Notion automation** — Archived checkbox on IPS Projects DB cascades to related Tasks and Notes (when real data entry begins)
 17. **End-of-build review** — compare IPS against Thomas Frank UB and Humaniaq APMH findings (reference PDF compiled)
 18. **GitHub push from Mac Studio** — credentials not yet configured
@@ -342,6 +343,30 @@ Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as sec
 - **This changes our approach:** use MCP first for all remaining view and database configuration
 - Note: MCP cannot delete views — any cleanup of unwanted views must be done manually in Notion
 - "DELETE ME" test view left in IPS Tasks DB — needs manual deletion
+
+---
+
+## Session 10 additions (14 Apr)
+
+### IPS versioned at v1.0
+System formally versioned as IPS v1.0 this session.
+
+### Database and property renames
+- IPS Content DB renamed to **IPS Video Elements DB**
+- `Content` relation property in IPS Tasks DB renamed to **Video Elements**
+- `Content` relation property in IPS Notes DB renamed to **Video Elements**
+- `My Content` section on Personal Dashboard renamed to **My Video Elements**
+
+### My Tasks view (IPS Tasks DB)
+Updated via MCP: now shows Name, Status, Type, Due Date, Video Elements.
+
+### Test data created for Broader Impacts project
+- 1 project record: Broader Impacts (Active, 3 revision rounds)
+- 3 episodes: EP01 The Carbon Cycle (In Progress), EP02 Renewable Energy Sources (Storyboard pending review), EP03 Ocean Acidification (Ready to Start)
+- 5 tasks across all three episodes (mix of Standard, Approval, Revision Round types)
+- 3 notes: Directive, Brief, Meeting note
+
+**Manual step outstanding:** MCP could not resolve cross-DB relation linking. Episodes are NOT yet linked to the Broader Impacts project record. Must be done manually in Notion — open each episode, set Project field to Broader Impacts.
 
 ---
 
@@ -388,4 +413,5 @@ MCP calls are token-heavy. Start fresh sessions rather than continuing long ones
 - Session 4 continued (2 Apr afternoon): Fully researched Notion layout system, set IPS Content DB layout (Tabbed, pinned properties, hidden helpers)
 - Session 5 (3 Apr): Installed Claude Code on MacPro. Completed DB layouts for IPS Tasks DB, IPS Notes DB, IPS Projects DB (all Tabbed, properties pinned and hidden). Renamed dashboards — IPS prefix removed. Built Personal Dashboard with five sections; Important Notes section configured (list view, Type = Directive). Property visibility for sections 2–5 outstanding.
 - Session 8 (13 Apr): Renamed Frame.io Link → Video Link in IPS Projects DB. Rebuilt New Project template (NAV toggle, Tasks section with List/Board/Calendar views, Notes section with List view, all filtered to current project, DB titles hidden). Updated layout (property group moved to panel, discussions off). Locked IPS Projects DB. Compiled Thomas Frank UB reference PDF. Confirmed Notion MCP working in Claude for Mac (OAuth, pre-configured) — can create views with filters/sorts/grouping/properties; MCP to be used for all remaining view/DB configuration.
+- Session 10 (14 Apr): Versioned IPS as v1.0. Renamed IPS Content DB → IPS Video Elements DB; renamed Content relation properties in Tasks and Notes DBs; renamed My Content → My Video Elements on Personal Dashboard. Configured My Tasks view via MCP (Name, Status, Type, Due Date, Video Elements). Created test data for Broader Impacts (1 project, 3 episodes, 5 tasks, 3 notes). Manual step outstanding: link episodes to Broader Impacts project in Notion. Confirmed directive date display resolved (items 1 and 2 closed).
 - Session 9 (14 Apr): Used MCP throughout to configure all dashboard views. Tasks Dashboard (All Tasks, My Tasks, Revision Rounds, Not Started), Projects Dashboard (fixed On Hold/Archived filters, added By Status list view), Notes Dashboard (all views with correct filters/properties), Videos Dashboard (Episodes, Active, Review, At Risk — deleted broken unnamed view manually), IPS Home (Active Projects, In Progress Videos, Pending Review — In Progress and Pending Review filtered to Episode level). Confirmed IPS Home = producer view, Personal Dashboard = individual view. Note: MCP calls are token-heavy — start fresh sessions for heavy MCP work.
