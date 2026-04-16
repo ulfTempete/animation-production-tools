@@ -30,11 +30,17 @@ Never advise on Notion UI behaviour from memory. If uncertain about how any Noti
 - **Date vs Created Time:** Date is a manually entered field. Created Time is an automatic system property. These are different — do not conflate them.
 - **Layout order:** always set Tabbed structure first, then pin properties, then set visibility. Confirm this order before walking through steps.
 - **Page body content:** rich text body content (e.g. Notes Body field) is never visible inline in any database view type. Users must click to open the record.
+- **Relation field filtering:** Notion cannot filter a relation field based on another relation field. No fix available — workflow convention only.
 
 ### Note types — exact values
 The IPS Notes DB Type field has exactly these five options:
-**General, Brief, Meeting, Directive, Asset**
-There is no "Notice" type. Directives are Type = Directive.
+**General, Brief, Meeting, Announcement, Asset**
+(Previously "Directive" — renamed to "Announcement" in Session 11)
+
+### Task types — exact values
+The IPS Tasks DB Type field has exactly these two options:
+**Standard, Collection**
+(Previously included "Approval" — removed in Session 11)
 
 ### Communication
 - User has ADHD — deliver information one step at a time, not in long lists
