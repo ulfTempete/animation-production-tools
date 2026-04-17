@@ -31,6 +31,8 @@ Never advise on Notion UI behaviour from memory. If uncertain about how any Noti
 - **Layout order:** always set Tabbed structure first, then pin properties, then set visibility. Confirm this order before walking through steps.
 - **Page body content:** rich text body content (e.g. Notes Body field) is never visible inline in any database view type. Users must click to open the record.
 - **Relation field filtering:** Notion cannot filter a relation field based on another relation field. No fix available — workflow convention only.
+- **Property group label:** the "Property group" block label in Notion's layout builder cannot be renamed. It is fixed.
+- **Relations group:** this is a distinct layout element separate from the Property group. It appears automatically when relation properties are set to display as "page section". It is NOT created via the + button. Needs further investigation before next attempt.
 
 ### Note types — exact values
 The IPS Notes DB Type field has exactly these five options:
@@ -59,46 +61,61 @@ At the end of every session:
 ## Overview
 Production tracking system for Innit Productions. Initially built for a 30-video animation project, designed as a reusable system for all future projects.
 
-**GitHub repo:** https://github.com/ulfTempete/animation-production-tools  
-**Notion workspace:** Innit Productions  
+**GitHub repo:** https://github.com/ulfTempete/animation-production-tools
+**Notion workspace:** Innit Productions
 **Local tools:** ~/notion-production-system/start.sh (runs CORS proxy on localhost:8080)
+
+---
+
+## Multi-Project Usage Patterns
+
+Two distinct usage modes:
+
+### Solo multi-project mode (default IPS)
+- Ulf works across multiple projects simultaneously
+- Tasks linked to Video Elements (always) and optionally to Project (for standalone videos)
+- Sort by Project on Tasks Dashboard for cross-project overview
+- Rule: always set Video Element on a task; set Project only for standalone video tasks
+
+### Large team project mode (duplicated IPS)
+- Duplicate entire IPS setup into isolated instance for the project
+- The whole system IS the project — no Project property needed
+- Freelancers granted access to that copy only
+- In duplicated instance: rename "Video Elements" relation on Tasks to "Episode"
+- Note: dashboards and linked views require manual reconnection after duplication
 
 ---
 
 ## Notion Databases
 
 ### IPS Video Elements DB
-*(Renamed from IPS Content DB in Session 10)*
-Core database. Episodes, Sequences and Shots all live here — differentiated by the Level field.
+Core database. Episodes, Sequences and Shots all live here — differentiated by the Element field.
 
 **Properties:**
 - Name (title)
-- Level (select: Episode, Sequence, Shot)
+- Element (select: Episode, Sequence, Shot, Single)
 - Parent (relation to same database — for hierarchy)
 - Status (select: Not Started, Ready to Start, In Progress, Pending Review, Approved, On Hold, Omitted, Delivered)
-- Status Note (rich text — short context note explaining the status when needed)
+- Status Note (rich text)
 - Storyboard Status (select: same options as Status minus Delivered)
 - Style Frames Status (select: same)
 - Animation Status (select: same)
 - Post Status (select: same)
 - Assignee (people)
 - Due Date (date)
+- Start Date (date)
+- Delivered Date (date)
 - Description (rich text)
 - Frame.io Link (url)
 - Screenshot (Files & Media)
+- Single (checkbox — marks a video as standalone rather than episode in a series)
+- Created By (created_by — auto-populated, added Session 11)
 - Tasks (reverse relation from IPS Tasks)
-- Notes (reverse relation from IPS Notes)
-- Project (reverse relation from IPS Projects — IPS Tasks DB also has a direct Project rollup via Video Elements relation)
-- Open Tasks (rollup — count of linked tasks not Done or Approved)
-- Task Progress (rollup — average Progress % across linked tasks)
-- Is Episode (formula — hidden helper for rollups)
-- Open Tasks Count (formula — hidden helper for rollups)
-
-**Layout:**
-- Structure: Tabbed
-- Pinned: Status, Level, Assignee, Due Date
-- Visible: Animation Status, Description, Frame.io Link, Open Tasks, Parent, Post Status, Screenshot, Start Date, Status Note, Storyboard Status, Style Frames Status
-- Hidden: Is Episode, Open Tasks Count, Task Progress, Tasks, Project
+- Project (relation to IPS Projects DB)
+- Open Tasks (rollup)
+- Task Progress (rollup)
+- Is Episode (formula — hidden helper)
+- Open Tasks Count (formula — hidden helper)
 
 **Status label colours:**
 - Not Started — grey, Ready to Start — blue, In Progress — purple
@@ -108,59 +125,66 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 
 **Views:**
 - Default view (table)
-- All Episodes (Level = Episode)
-- All Shots (Level = Shot)
+- All Episodes (Element = Episode)
+- All Shots (Element = Shot)
 - In Progress (Status = In Progress)
 - Pending Review (Status = Pending Review)
 - At Risk (Status = On Hold)
 
 **Templates:**
-- New Episode (created — green film icon, Level = Episode)
+- New Episode (created — green film icon, Element = Episode)
 - New Sequence — still to create
 - New Shot — still to create
+
+**Outstanding layout work (manual):**
+- Property visibility on record page layout still showing all properties — needs manual fix in Notion
 
 ---
 
 ### IPS Tasks DB
 **Properties:**
 - Name (title)
-- Type (select: Standard, Revision Round, Approval)
+- Type (select: Standard, Collection)
 - Status (select: Not Started, In Progress, Pending Review, Approved, On Hold, Done)
+- Priority (select — added Session 12)
 - Assignee (people)
 - Due Date (date)
-- Description (rich text)
-- Video Elements (relation to IPS Video Elements DB, formerly "Content")
+- Details (rich text — renamed from Description Session 11)
+- Status Note (rich text)
+- Video Elements (relation to IPS Video Elements DB — limited to 1 page, renamed to "Project Component" in some views — confirm)
+- Project (relation to IPS Projects DB — added Session 11)
 - Parent Task (relation to same database — for subtasks)
-- Progress (number, percentage — used for revision round completion)
+- Progress (number, percentage)
 - Is Open Task (formula — hidden helper)
 
 **Layout:**
-- Structure: Tabbed
-- Pinned: Status, Type, Assignee, Due Date
-- Hidden: Is Open Task
+- Structure: Tabbed (on Standard template)
+- Pinned: Status, Assignee, Priority, Due Date (configured Session 12)
+- Sub-Tasks tab added (Session 12)
+- Relations group: NOT YET RESOLVED — needs investigation (see Rules section)
 
-**Views:**
-- Default view (table)
-- All Tasks
-- My Tasks (Assignee = Me) — shows Name, Status, Type, Due Date, Video Elements (configured Session 10)
-- Revision Rounds (Type = Revision Round)
+**Views (Tasks Dashboard):**
+- All Tasks Overview: shows Name, Status, Assignee, Due Date, Project, Video Elements, Type — sorted by Due Date
+- My Tasks: shows Name, Status, Type, Due Date, Project, Video Elements — sorted by Due Date
 
-**Templates:** Standard, Revision Round, Approval — still to create
+**Templates:** Standard (partially configured Session 12), Collection — still to create
 
 ---
 
 ### IPS Notes DB v2
 **Properties:**
 - Name (title)
-- Type (select: General, Brief, Meeting, Directive, Asset) ← exact values, no others
+- Type (select: General, Brief, Meeting, Announcement, Asset)
+  ← "Directive" renamed to "Announcement" Session 11
 - Author (people)
 - Date (date — manually entered)
 - Body (rich text — page content, not visible inline in any view)
 - Project (relation to IPS Projects)
-- Video Elements (relation to IPS Video Elements DB, formerly "Content")
+- Video Elements (relation to IPS Video Elements DB)
 - URL (url)
 - Favourite (checkbox)
 - Archived (checkbox)
+- Status Note (rich text — added Session 11)
 
 **Layout:**
 - Structure: Tabbed
@@ -170,81 +194,88 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 **Templates:**
 - Meeting: [Date] — Agenda, Meeting Notes, Action Items sections
 - Brief — Overview, Key Requirements, References & Links sections
-- Notice — Notice, Applies To, Effective From sections
+- Announcement — Notice, Applies To, Effective From sections
 - General — empty
 
 **Views:**
 - All Notes
 - By Project
 - By Episode
-- Important Notices (Type = Directive)
+- Important Announcements (Type = Announcement)
 
 ---
 
 ### IPS Projects DB
 **Properties:**
 - Name (title)
-- Status (select: Active, On Hold, Complete, Archived)
+- Type (select: Single Video, Series)
+- Status (select: Active, On Hold, Delivered, Archived)
+- Assignee (people — added Session 11)
+- Owner (people — pre-existing; review whether both Assignee and Owner are needed)
 - Video Link (url)
-- Revision Allowance (number — agreed revision rounds)
-- Revisions Used (number — rounds used so far)
-- Total Videos (rollup — count of linked Episodes)
-- Total Open Tasks (rollup — sum of open tasks across linked content)
-- Videos (relation to IPS Content)
+- Start Date (date)
+- Due Date (date)
+- Delivered Date (date)
+- Revision Allowance (number)
+- Revisions Used (number)
+- Total Videos (rollup — count of linked Episodes; consider renaming to Total Episodes)
+- Total Open Tasks (rollup)
+- Status Note (rich text — added Session 11)
+- Videos (relation to IPS Video Elements DB)
 - Brief, Client Contacts, Key Dates, Instructions, Links (rich text — in page body)
 
-**Layout (set Session 8):** Property group moved to panel, page discussions turned off. DB locked.
+**Layout:** Property group moved to panel, page discussions turned off. DB locked (unlock before MCP changes, re-lock after).
 - Pinned: Status, Owner, Video Link, Total Open Tasks
 
-**Template:** "New Project" template (default) — rebuilt Session 8. Includes:
-- NAV toggle (collapsed by default): hyperlinks to Projects Dashboard and Personal Dashboard, block links to Tasks and Notes sections within the page
-- Tasks section: linked IPS Tasks DB with List, Board, and Calendar views; filtered to current project; grouped by Status; visible properties: Status, Due Date, Assignee; database title hidden on all views
-- Notes section: linked IPS Notes DB with List view; filtered to current project; visible properties: Type, Created Time, Author; database title hidden
+**Template:** "New Project" — includes NAV toggle, Tasks section, Notes section (all filtered to current project).
 
-**Test data:** "Broader Impacts" project record exists — test data to be deleted before real data entry.
+**Outstanding:**
+- Video Link property: consider moving to a summary section in the page body rather than a property (manual template change)
+- Decide whether both Owner and Assignee are needed
+
+**Test data:** "Broader Impacts" project record exists — to be deleted before real data entry.
 
 ---
 
 ## Dashboards
 
-All dashboards use a synced callout nav block. Any update to the nav propagates to all dashboards automatically.
+All dashboards use a synced callout nav block.
 
 **Nav links:** Home | Projects Dashboard | Videos Dashboard | Tasks Dashboard | Notes Dashboard | Personal Dashboard
 
-### Home (formerly IPS Home)
-Producer-level overview. Sections: Active Projects, In Progress, Pending Review.
+### Home (IPS Home)
+Producer/admin overview. Sections: Active Projects, In Progress, Pending Review.
 Note: Consider restricting visibility to producer only (deferred).
 
 ### Projects Dashboard
-Views: Active, On Hold, Completed, Archived.
+Views: Active, On Hold, Completed, Archived, All Projects, By Status.
+**Outstanding:** Consider removing — may be redundant given IPS Home and Personal Dashboard.
 
 ### Videos Dashboard
-Views: All Videos, Episodes Only, In Progress, Pending Review, At Risk, Visual Overview (gallery — Screenshot as card cover).
+Views: All Videos, Episodes Only, In Progress, Pending Review, At Risk, Visual Overview (gallery).
 
 ### Tasks Dashboard
-Views: All Tasks, My Tasks, Revision Rounds, Not Started.
+Views: All Tasks Overview, My Tasks.
+Both views show: Name, Status, Type, Due Date, Project, Video Elements.
 
 ### Notes Dashboard
-Views: All Notes, By Project, By Episode, Important Notices.
+Views: All Notes, By Project, By Episode, Important Announcements.
 
 ### Personal Dashboard
-**Purpose:** Each team member's default startup page. Single filtered dashboard — not per-person pages — for scalability across projects.
-
-**To set as startup page:** Settings → My notifications & settings → Open on startup.
+**Purpose:** Each team member's default startup page.
+**Label change:** "Important Notes" renamed to "Important Announcements" (Session 11).
+**Label change:** "All Projects" renamed to "My Projects" (Session 11).
 
 **Sections:**
-1. **Important Notes** — IPS Notes DB, filtered Type = Directive, list view
-   - Body content is NOT visible inline — users must click to read full directive (this is a Notion constraint, not a config issue)
-   - Date display: outstanding decision — add Created Time property, or require manual Date entry when creating a directive
-   - Instruction manual note: directive titles must be descriptive; users must click to read full content
-2. **My Tasks** — IPS Tasks DB, filtered Assignee = Me. Property visibility not yet configured.
-3. **My Video Elements** — IPS Video Elements DB, filtered Assignee = Me. Property visibility not yet configured.
-4. **My Notes** — IPS Notes DB, filtered Author = Me. Property visibility not yet configured.
-5. **All Notes** — IPS Notes DB, unfiltered, grouped by Content. Property visibility not yet configured.
+1. Important Announcements — IPS Notes DB, filtered Type = Announcement
+2. My Tasks — IPS Tasks DB, filtered Assignee = Me
+3. My Video Elements — IPS Video Elements DB, filtered Assignee = Me
+4. My Notes — IPS Notes DB, filtered Author = Me
+5. My Projects — IPS Projects DB (previously All Projects)
 
-**Still to do:**
-- Resolve directive date display (Created Time vs manual Date)
-- Configure property visibility for sections 2–5
+**Outstanding:**
+- Producer vs Creative Dashboard split — producer has new project/episode buttons; creative does not. Notion page access can be restricted by person. Flag for dedicated session.
+- Property visibility for sections 2–5 still needs configuring
 - Add Personal Dashboard to synced nav block
 - Assign icon to Personal Dashboard
 
@@ -264,160 +295,84 @@ Views: All Notes, By Project, By Episode, Important Notices.
 ## Client-Facing Tools
 
 ### frameio-to-notion.html
-Frame.io CSV converter. Drag-and-drop CSV, preview comments with replies nested, select episode, create Revision Round task in IPS Tasks.
+Frame.io CSV converter. Drag-and-drop CSV, preview comments, select episode, create Collection task in IPS Tasks.
 - Runs locally via start.sh (CORS proxy on localhost:8080)
-- Timecodes shown as H3 headings, comments as checkbox items, replies with ↳
 
 ### client-feedback.html
-Client feedback form. Clients submit timecoded feedback without logging in.
-- URL params: ?video=EpisodeName&project=ProjectName&contentId=NOTION_PAGE_ID
-- Timecode auto-formats as digits are typed
-- Save button: stores to localStorage + offers mailto link to resume on another device
-- Review step before submission
-- Submits to IPS Tasks as Revision Round task via Cloudflare Worker
-- Innit branding applied (orange #E8511A, charcoal #1A1A1A, logo embedded as base64)
-- Mobile responsive
+Client feedback form. Submits to IPS Tasks as Collection task via Cloudflare Worker.
+- Innit branding, mobile responsive
 
 ### notion-proxy.js (Cloudflare Worker)
-Proxies Notion API calls from client-feedback.html. NOTION_API_KEY stored as secret.
 **Status: DEPLOYED** — https://notion-proxy.ole-1b2.workers.dev
 
 ---
 
 ## Key Design Decisions
-- Single IPS Content database with Level field (not separate databases per level)
-- Per-stage status columns inspired by ShotGrid pipeline step view
-- Eight-value status list — "Ready to Start" distinguishes clear-to-begin from waiting; "Omitted" for cut shots
-- Status Note field for context when status alone isn't enough
-- Task Type field (Standard / Revision Round / Approval) enables reporting on revision round count
-- Built fresh rather than inheriting Ultimate Brain complexity — borrowed only the Parent Task / Sub-Tasks relation pattern
-- IPS prefix kept on databases; removed from dashboard page names for cleaner navigation
+- Single IPS Video Elements DB with Element field (Episode, Sequence, Shot, Single)
+- Tasks always linked to a Video Element; Project relation used additionally for standalone video tasks only
+- Sort by Project on Tasks Dashboard for cross-project overview
+- Task Type simplified to Standard and Collection (Approval removed Session 11)
+- Directive renamed to Announcement in Notes Type field (Session 11)
+- IPS designed as duplicatable template for large team projects; in duplicated instance rename Video Elements relation to Episode and remove Project relation
 - Innit branding: orange #E8511A, charcoal #1A1A1A
-- Personal Dashboard: single page filtered to current user, not per-person pages — scales across projects
 
 ---
 
 ## Database IDs
 - IPS Projects DB: 33119ff7-94ee-815d-b537-c658ccaf2982
-- IPS Content DB: 33119ff7-94ee-8110-8df4-fbc98620bf45
+- IPS Video Elements DB: 33119ff7-94ee-8110-8df4-fbc98620bf45
 - IPS Tasks DB: 33119ff7-94ee-817a-b249-ccca6d2df580
 - IPS Notes DB v2: 33519ff7-94ee-8167-b40c-ca4055f4bd56
 
 ---
 
-## IPS Guide / Instruction Manual Notes
-*(To be built incrementally)*
-- Directive titles must be descriptive — the title is the only thing visible in the Personal Dashboard without clicking
-- Users must click a Directive to read the full content
-- Each team member should set Personal Dashboard as their startup page via Settings → My notifications & settings → Open on startup
-
----
-
 ## Outstanding Items
-1. ~~**Personal Dashboard** — resolve directive date display~~ ✓ Done (Created Time and Date both added and configured as visible in Important Notes section)
-2. ~~**Personal Dashboard** — configure property visibility for My Tasks~~ ✓ Done (My Tasks view configured Session 10 — shows Name, Status, Type, Due Date, Video Elements). My Video Elements, My Notes, All Notes sections still outstanding.
-3. **Personal Dashboard** — add to synced nav block
-4. **Personal Dashboard** — assign icon
+1. **Personal Dashboard** — add to synced nav block
+2. **Personal Dashboard** — assign icon
+3. **Personal Dashboard** — Producer vs Creative split with access controls (dedicated session)
+4. **Personal Dashboard** — configure property visibility for sections 2–5
 5. **Home dashboard** — consider restricting visibility to producer only (deferred)
-6. **Bespoke icons at 280x280px** — Ulf designing (Episode, Sequence, Shot, Task types, Note)
-7. **IPS Content DB templates** — Sequence and Shot still to create
-8. **IPS Tasks DB templates** — Standard, Revision Round, Approval still to create
+6. **Bespoke icons at 280x280px** — Ulf designing
+7. **IPS Video Elements DB templates** — Sequence and Shot still to create
+8. **IPS Tasks DB templates** — Standard (partially done) and Collection still to complete
 9. **IPS Guide / instruction manual** — build incrementally
-10. **Delete test data** and enter real Broader Impacts project data
+10. **Delete test data** and enter real Broader Impacts project data; link episodes to Broader Impacts project manually in Notion
 11. **Naming convention** for content records (flag when real data entry begins)
 12. **Rename Notion integration** from "Animation Production System" to "Innit Production System"
 13. **Admin nav** at bottom of Home dashboard
 14. **Sidebar nav consideration** (Aram Atkinson two-column style)
-15. **Rename "Name" title fields** in all IPS databases to "Title" *(also rename "My Content" section on Personal Dashboard to "My Video Elements" — done Session 10)*
+15. **Rename "Name" title fields** in all IPS databases to "Title"
 16. **Notion automation** — Archived checkbox on IPS Projects DB cascades to related Tasks and Notes (when real data entry begins)
-17. **End-of-build review** — compare IPS against Thomas Frank UB and Humaniaq APMH findings (reference PDF compiled)
-18. **GitHub push from Mac Studio** — credentials not yet configured
+17. **End-of-build review** — compare IPS against Thomas Frank UB and Humaniaq APMH findings
+18. **GitHub push from Mac Studio** — credentials not yet configured; local commit exists from Session 11
 19. **Combined Innit Admin dashboard** — spanning Client Comms + Dates DBs
-20. **Delete "DELETE ME" view** from IPS Tasks DB (manual — MCP cannot delete views)
-21. **Personal Dashboard views** — still need configuring (next session)
-22. **My Tasks view** — manually add Assignee filter (Ole) in Notion (Filter → Assignee → Ole)
-23. **Consider upgrading to Max plan** or enabling extra usage given heavy MCP usage pattern
-
----
-
-## Session 8 continued (13 Apr afternoon)
-
-### Notion MCP
-- Notion MCP confirmed working in Claude for Mac — already connected via OAuth (was pre-configured)
-- Test view created and deleted successfully on IPS Tasks DB via MCP
-- MCP can create views with filters, sorts, grouping, and visible properties configured automatically
-- **This changes our approach:** use MCP first for all remaining view and database configuration
-- Note: MCP cannot delete views — any cleanup of unwanted views must be done manually in Notion
-- "DELETE ME" test view left in IPS Tasks DB — needs manual deletion
-
----
-
-## Session 10 additions (14 Apr)
-
-### IPS versioned at v1.0
-System formally versioned as IPS v1.0 this session.
-
-### Database and property renames
-- IPS Content DB renamed to **IPS Video Elements DB**
-- `Content` relation property in IPS Tasks DB renamed to **Video Elements**
-- `Content` relation property in IPS Notes DB renamed to **Video Elements**
-- `My Content` section on Personal Dashboard renamed to **My Video Elements**
-
-### My Tasks view (IPS Tasks DB)
-Updated via MCP: now shows Name, Status, Type, Due Date, Video Elements.
-
-### Test data created for Broader Impacts project
-- 1 project record: Broader Impacts (Active, 3 revision rounds)
-- 3 episodes: EP01 The Carbon Cycle (In Progress), EP02 Renewable Energy Sources (Storyboard pending review), EP03 Ocean Acidification (Ready to Start)
-- 5 tasks across all three episodes (mix of Standard, Approval, Revision Round types)
-- 3 notes: Directive, Brief, Meeting note
-
-**Manual step outstanding:** MCP could not resolve cross-DB relation linking. Episodes are NOT yet linked to the Broader Impacts project record. Must be done manually in Notion — open each episode, set Project field to Broader Impacts.
-
----
-
-## Session 9 additions (14 Apr)
-
-### Dashboard views configured via MCP
-
-**Tasks Dashboard**
-- All Tasks: sorted by Due Date; shows Status, Type, Assignee, Due Date, Project
-- My Tasks: sorted by Due Date; Assignee filter needs manual setup in Notion (Filter → Assignee → Ole)
-- Revision Rounds: filtered to Type = Revision Round
-- Not Started: filtered to Status = Not Started
-
-**Projects Dashboard**
-- Fixed On Hold and Archived filters (both were incorrectly filtering for Active)
-- Added By Status list view (grouped by Status)
-
-**Notes Dashboard**
-- All views updated with correct filters and visible properties (Type, Created Time, Author, Project)
-- Important Notices filter fixed
-
-**Videos Dashboard**
-- Episodes: Level = Episode
-- Active: Status = In Progress
-- Review: Status = Pending Review
-- At Risk: Status = On Hold
-- Deleted unnamed broken view (manually)
-
-**IPS Home**
-- Active Projects, In Progress Videos, Pending Review — filters and visible properties tidied
-- In Progress and Pending Review filtered to Episode level only
-- Confirmed IPS Home = admin/producer view; Personal Dashboard = individual team member view
-
-### MCP usage note
-MCP calls are token-heavy. Start fresh sessions rather than continuing long ones to conserve usage allowance.
+20. **Delete "DELETE ME" view** from IPS Tasks DB (manual)
+21. **My Tasks view** — manually add Assignee filter (Ole) in Notion
+22. **Consider upgrading to Max plan** given heavy MCP usage
+23. **IPS Projects DB** — decide whether both Owner and Assignee properties are needed; remove one if redundant
+24. **Video Link property on Project Page** — consider moving to summary section in page body rather than a property (manual template change)
+25. **Auto-assign Author when creating note from project page** — needs Notion automation
+26. **Announcement section at top of Project Page** — add to New Project template (manual)
+27. **Video Elements DB naming** — "Video Elements" may not suit non-video work (e.g. logo design); revisit
+28. **Property visibility on Video Elements record page layout** — all properties still showing; fix manually in Notion
+29. **Projects Dashboard** — consider removing (may be redundant)
+30. **Total Videos rollup** — consider renaming to Total Episodes; revisit after testing task assignment flow
+31. **Re-lock IPS Projects DB** after MCP changes this session
+32. **IPS Tasks DB Standard template** — layout partially configured. Heading set correctly (Status, Assignee, Priority, Due Date). Sub-Tasks tab added. Relations group NOT YET RESOLVED. Next attempt: investigate whether relation properties (Project, Project Component/Video Elements) need to be set to "page section" display mode to trigger the Relations group element. Research this thoroughly before next attempt.
+33. **Priority field** — added to IPS Tasks DB (Session 12). Confirm label colours set correctly.
+34. **"Project Component"** — confirm whether this is the renamed Video Elements relation in IPS Tasks DB. Clarify and update property name if needed.
+35. **Role-based filtering** (admin/producer/animator) to reduce information overload — flagged Session 11, deferred.
 
 ---
 
 ## Session Log
-- Session 1 (29-30 Mar): Designed system architecture, built all four Notion databases via API, built Frame.io CSV converter, built client feedback form, pushed all tools to GitHub
-- Session 2 (31 Mar): Deployed Cloudflare Worker, fixed client feedback form (logo removed, comment field fixed to textarea, timecode auto-pad on blur, instructions updated), tested form end to end
-- Session 3 (31 Mar afternoon): Added gallery view to Videos Dashboard, applied status label colour scheme to all status fields, started IPS Content DB templates (New Episode created)
-- Session 4 (2 Apr): Rebuilt IPS Notes DB as v2, created note templates, built Notes Dashboard, updated synced nav, researched Notion layout system, set IPS Content DB layout
-- Session 4 continued (2 Apr afternoon): Fully researched Notion layout system, set IPS Content DB layout (Tabbed, pinned properties, hidden helpers)
-- Session 5 (3 Apr): Installed Claude Code on MacPro. Completed DB layouts for IPS Tasks DB, IPS Notes DB, IPS Projects DB (all Tabbed, properties pinned and hidden). Renamed dashboards — IPS prefix removed. Built Personal Dashboard with five sections; Important Notes section configured (list view, Type = Directive). Property visibility for sections 2–5 outstanding.
-- Session 8 (13 Apr): Renamed Frame.io Link → Video Link in IPS Projects DB. Rebuilt New Project template (NAV toggle, Tasks section with List/Board/Calendar views, Notes section with List view, all filtered to current project, DB titles hidden). Updated layout (property group moved to panel, discussions off). Locked IPS Projects DB. Compiled Thomas Frank UB reference PDF. Confirmed Notion MCP working in Claude for Mac (OAuth, pre-configured) — can create views with filters/sorts/grouping/properties; MCP to be used for all remaining view/DB configuration.
-- Session 10 (14 Apr): Versioned IPS as v1.0. Renamed IPS Content DB → IPS Video Elements DB; renamed Content relation properties in Tasks and Notes DBs; renamed My Content → My Video Elements on Personal Dashboard. Configured My Tasks view via MCP (Name, Status, Type, Due Date, Video Elements). Created test data for Broader Impacts (1 project, 3 episodes, 5 tasks, 3 notes). Manual step outstanding: link episodes to Broader Impacts project in Notion. Confirmed directive date display resolved (items 1 and 2 closed).
-- Session 9 (14 Apr): Used MCP throughout to configure all dashboard views. Tasks Dashboard (All Tasks, My Tasks, Revision Rounds, Not Started), Projects Dashboard (fixed On Hold/Archived filters, added By Status list view), Notes Dashboard (all views with correct filters/properties), Videos Dashboard (Episodes, Active, Review, At Risk — deleted broken unnamed view manually), IPS Home (Active Projects, In Progress Videos, Pending Review — In Progress and Pending Review filtered to Episode level). Confirmed IPS Home = producer view, Personal Dashboard = individual view. Note: MCP calls are token-heavy — start fresh sessions for heavy MCP work.
+- Session 1 (29-30 Mar): Designed system architecture, built all four Notion databases, built Frame.io CSV converter and client feedback form, pushed to GitHub
+- Session 2 (31 Mar): Deployed Cloudflare Worker, fixed client feedback form
+- Session 3 (31 Mar afternoon): Added gallery view, applied status label colours, started Video Elements DB templates
+- Session 4 (2 Apr): Rebuilt IPS Notes DB as v2, created note templates, built Notes Dashboard, set IPS Content DB layout
+- Session 5 (3 Apr): Installed Claude Code. Completed DB layouts. Renamed dashboards. Built Personal Dashboard.
+- Session 8 (13 Apr): Renamed Frame.io Link → Video Link in Projects DB. Rebuilt New Project template. Confirmed Notion MCP working.
+- Session 9 (14 Apr): Configured all dashboard views via MCP.
+- Session 10 (14 Apr): Versioned IPS as v1.0. Renamed IPS Content DB → IPS Video Elements DB. Configured My Tasks view. Created Broader Impacts test data.
+- Session 11 (17 Apr): Reviewed Ulf's notes. Added Project relation to IPS Tasks DB. Limited Video Elements relation to 1 page per task. Added Project and Video Elements to All Tasks Overview and My Tasks views on Tasks Dashboard. Added Created By to IPS Video Elements DB. Removed Approval from Task Type field (now Standard and Collection only). Renamed Directive → Announcement in Notes Type field. Discussed multi-project and large-team usage patterns. Created PreHapp team intro page in Notion. Multiple items flagged as outstanding.
+- Session 12 (17 Apr): Worked through IPS Tasks DB Standard template layout. Heading configured correctly (Status, Assignee, Priority, Due Date). Sub-Tasks tab added. Priority field confirmed in Tasks DB. Attempted to create Relations group — could not resolve. Notion layout builder Relations group element appears to require relation properties set to "page section" display mode. Needs fresh research before next attempt. PROJECT_STATE.md was found truncated from Session 11 commit — reconstructed in full this session.
