@@ -49,10 +49,16 @@ The IPS Tasks DB Type field has exactly these two options:
 - Do not suggest steps or options without being confident they are correct
 - If something needs to be looked up first, say so and look it up before proceeding
 
+### Notion UI — stop after two failed attempts
+If a UI step fails twice, stop. Do not try further variations. State clearly what was attempted and what happened, and flag it as an outstanding item. Never claim to see the problem without a verified cause.
+
+### CC / MCP — consider at session start
+At the start of every IPS session, consider whether CC or MCP can be used before proceeding manually. Flag this proactively if relevant.
+
 ### End of session — CC update routine
 At the end of every session:
 1. Compile all changes made during the session
-2. User opens Claude Code in Terminal: `cd /Users/olesturm/animation-production-tools` then `claude`
+2. User opens Claude Code in Terminal: `cd "/Users/olesturm/Library/Mobile Documents/com~apple~CloudDocs/ESSENTIALS/MAC ESSENTIALS/Claude/Claude Access/animation-production-tools"` then `claude`
 3. Instruct Claude Code to update `project_state.md` with the session notes
 4. Claude Code commits and pushes to GitHub
 
@@ -64,6 +70,12 @@ Production tracking system for Innit Productions. Initially built for a 30-video
 **GitHub repo:** https://github.com/ulfTempete/animation-production-tools
 **Notion workspace:** Innit Productions
 **Local tools:** ~/notion-production-system/start.sh (runs CORS proxy on localhost:8080)
+**CC launch command:** `cd "/Users/olesturm/Library/Mobile Documents/com~apple~CloudDocs/ESSENTIALS/MAC ESSENTIALS/Claude/Claude Access/animation-production-tools" && claude`
+
+**iCloud folder structure:**
+- `Claude/` — at /Users/olesturm/Library/Mobile Documents/com~apple~CloudDocs/ESSENTIALS/MAC ESSENTIALS/Claude
+- `Claude/Claude Access/` — CC's working folder for all project repos
+- `Claude/IPS/` — production files, assets, related docs (to be populated)
 
 ---
 
@@ -157,11 +169,15 @@ Core database. Episodes, Sequences and Shots all live here — differentiated by
 - Progress (number, percentage)
 - Is Open Task (formula — hidden helper)
 
-**Layout:**
-- Structure: Tabbed (on Standard template)
-- Pinned: Status, Assignee, Priority, Due Date (configured Session 12)
-- Sub-Tasks tab added (Session 12)
-- Relations group: NOT YET RESOLVED — needs investigation (see Rules section)
+**Layout (Standard template — configured Session 13):**
+- Structure: Tabbed
+- Heading pinned: Status, Type, Assignee, Due Date
+- Tabs: Content, Sub-item, Parent item, Project Component
+- Property group shows: Details, Priority, Progress, Status Note
+- Relation properties (Parent Task, Parent item, Project, Project Component, Sub-item) hidden from Property group
+- Page discussions (comments) retained
+- Applied to all pages
+- Relations group: NOT YET RESOLVED — appears automatically in Thomas Frank's demo when switching to Tabbed layout; not appearing in IPS Tasks DB despite native Sub-items being enabled. Question posted to Thomas Frank community. Do not attempt further variations until response received.
 
 **Views (Tasks Dashboard):**
 - All Tasks Overview: shows Name, Status, Assignee, Due Date, Project, Video Elements, Type — sorted by Due Date
@@ -344,7 +360,7 @@ Client feedback form. Submits to IPS Tasks as Collection task via Cloudflare Wor
 15. **Rename "Name" title fields** in all IPS databases to "Title"
 16. **Notion automation** — Archived checkbox on IPS Projects DB cascades to related Tasks and Notes (when real data entry begins)
 17. **End-of-build review** — compare IPS against Thomas Frank UB and Humaniaq APMH findings
-18. **GitHub push from Mac Studio** — credentials not yet configured; local commit exists from Session 11
+18. ~~**GitHub push from Mac Studio**~~ ✓ Done (Session 13 — gh installed, OAuth authenticated, repo moved to iCloud path, push confirmed)
 19. **Combined Innit Admin dashboard** — spanning Client Comms + Dates DBs
 20. **Delete "DELETE ME" view** from IPS Tasks DB (manual)
 21. **My Tasks view** — manually add Assignee filter (Ole) in Notion
@@ -362,6 +378,8 @@ Client feedback form. Submits to IPS Tasks as Collection task via Cloudflare Wor
 33. **Priority field** — added to IPS Tasks DB (Session 12). Confirm label colours set correctly.
 34. **"Project Component"** — confirm whether this is the renamed Video Elements relation in IPS Tasks DB. Clarify and update property name if needed.
 35. **Role-based filtering** (admin/producer/animator) to reduce information overload — flagged Session 11, deferred.
+36. **Relations group in IPS Tasks DB Standard template** — not appearing despite native Sub-items enabled. Question posted to Thomas Frank community. Do not attempt further variations until response received.
+37. **IPS/iCloud folder** — `Claude/IPS/` created; to be populated with production files, assets, and related docs.
 
 ---
 
@@ -376,3 +394,4 @@ Client feedback form. Submits to IPS Tasks as Collection task via Cloudflare Wor
 - Session 10 (14 Apr): Versioned IPS as v1.0. Renamed IPS Content DB → IPS Video Elements DB. Configured My Tasks view. Created Broader Impacts test data.
 - Session 11 (17 Apr): Reviewed Ulf's notes. Added Project relation to IPS Tasks DB. Limited Video Elements relation to 1 page per task. Added Project and Video Elements to All Tasks Overview and My Tasks views on Tasks Dashboard. Added Created By to IPS Video Elements DB. Removed Approval from Task Type field (now Standard and Collection only). Renamed Directive → Announcement in Notes Type field. Discussed multi-project and large-team usage patterns. Created PreHapp team intro page in Notion. Multiple items flagged as outstanding.
 - Session 12 (17 Apr): Worked through IPS Tasks DB Standard template layout. Heading configured correctly (Status, Assignee, Priority, Due Date). Sub-Tasks tab added. Priority field confirmed in Tasks DB. Attempted to create Relations group — could not resolve. Notion layout builder Relations group element appears to require relation properties set to "page section" display mode. Needs fresh research before next attempt. PROJECT_STATE.md was found truncated from Session 11 commit — reconstructed in full this session.
+- Session 13 (21 Apr): Mac Studio setup completed — repo moved to iCloud path, gh installed and authenticated, merge conflict resolved, push confirmed (item 18 closed). iCloud folder structure established (Claude Access/, IPS/). CC launch command updated. IPS Tasks DB Standard template layout completed: Tabbed, pinned Status/Type/Assignee/Due Date, tabs Content/Sub-item/Parent item/Project Component, Property group shows Details/Priority/Progress/Status Note, relation properties hidden from Property group, discussions retained. Relations group still unresolved — question posted to Thomas Frank community. Added Notion UI stop-after-two-attempts rule and CC/MCP proactive suggestion rule to project instructions.
